@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Rpg_Restapi.Dtos;
 using Rpg_Restapi.Models;
 
@@ -79,8 +80,9 @@ namespace Rpg_Restapi.Services {
         var index = _characterList.FindIndex (c => c.Id == charFound.Id);
         var charFoundDto = _mapper.Map<UpdateCharacterDto> (charFound);
         patchCharacterDto.ApplyTo (charFoundDto);
-        _characterList[index] = _mapper.Map<Character> (charFoundDto);
-        serviceResponse.Data = _mapper.Map<GetCharacterDto> (charFoundDto);
+        var charResult = _mapper.Map<Character> (charFoundDto);
+        _characterList[index] = charResult;
+        serviceResponse.Data = _mapper.Map<GetCharacterDto> (charResult);
       } catch (Exception ex) {
         serviceResponse.Success = false;
         serviceResponse.Message = ex.Message;
