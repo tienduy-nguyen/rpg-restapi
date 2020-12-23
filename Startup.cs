@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi {
   public class Startup {
@@ -23,6 +24,11 @@ namespace Rpg_Restapi {
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices (IServiceCollection services) {
       services.AddControllers ();
+
+      // Denpendency Injection for service
+      services.AddScoped<ICharacterService, CharacterService> ();
+
+      // Swagger doc
       services.AddSwaggerGen (c => {
         c.SwaggerDoc ("v1", new OpenApiInfo {
           Title = "Role Playing Game API",
