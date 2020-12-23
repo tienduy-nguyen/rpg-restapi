@@ -13,17 +13,17 @@ namespace Rpg_Restapi.Services {
       new Character { Id = 2, Name = "Paul" },
       new Character { Id = 2, Name = "John" }
     };
-    public Task<List<Character>> AddCharacter (Character newCharacter) {
+    public async Task<List<Character>> AddCharacter (Character newCharacter) {
       _characterList.Add (newCharacter);
-      return Task.FromResult<List<Character>> (_characterList);
+      return _characterList;
     }
 
-    public Task<List<Character>> GetAllCharacters () {
-      return Task.FromResult<List<Character>> (_characterList);
+    public async Task<List<Character>> GetAllCharacters () {
+      return _characterList;
     }
 
-    public Task<Character> GetCharacterById (int id) {
-      return Task.FromResult<Character> (_characterList.FirstOrDefault (c => c.Id == id));
+    public async Task<Character> GetCharacterById (int id) {
+      return _characterList.FirstOrDefault (c => c.Id == id);
     }
   }
 }

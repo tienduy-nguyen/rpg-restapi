@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -16,18 +17,18 @@ namespace Rpg_Restapi.Controllers {
     private readonly ICharacterService _characterService;
 
     [HttpGet]
-    public ActionResult<IEnumerable<Character>> GetAll () {
-      return Ok (_characterService.GetAllCharacters ());
+    public async Task<ActionResult<IEnumerable<Character>>> GetAll () {
+      return Ok (await _characterService.GetAllCharacters ());
     }
 
     [HttpGet ("{id}")]
-    public ActionResult<Character> GetCharacterById (int id) {
-      return Ok (_characterService.GetCharacterById (id));
+    public async Task<ActionResult<Character>> GetCharacterById (int id) {
+      return Ok (await _characterService.GetCharacterById (id));
     }
 
     [HttpPost]
-    public ActionResult<Character> CreateCharacter (Character newCharacter) {
-      var check = _characterService.GetAllCharacters ().FirstOrDefault (c => c.Id == newCharacter.Id);
+    public async Task<ActionResult<Character>> CreateCharacter (Character newCharacter) {
+      var check = await _characterService.GetAllCharacters ().FirstOrDefault (c => c.Id == newCharacter.Id);
       if (check != null) return Conflict (new { message = $"Character with id '{newCharacter.Id}' already existed!" });
       _characterService.AddCharacter (newCharacter);
       return Ok (newCharacter);
