@@ -11,7 +11,7 @@ namespace Rpg_Restapi.Services {
       new Character (),
       new Character { Id = 1, Name = "Same" },
       new Character { Id = 2, Name = "Paul" },
-      new Character { Id = 2, Name = "John" }
+      new Character { Id = 3, Name = "John" }
     };
     public async Task<List<Character>> AddCharacter (Character newCharacter) {
       _characterList.Add (newCharacter);
