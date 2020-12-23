@@ -1,15 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Rpg_Restapi.Services;
 
@@ -25,6 +23,8 @@ namespace Rpg_Restapi {
     public void ConfigureServices (IServiceCollection services) {
       services.AddControllers ();
 
+      // Auto mapper class - Dto
+      services.AddAutoMapper (AppDomain.CurrentDomain.GetAssemblies ());
       // Denpendency Injection for service
       services.AddScoped<ICharacterService, CharacterService> ();
 
