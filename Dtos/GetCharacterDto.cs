@@ -1,7 +1,6 @@
 using Rpg_Restapi.Models;
 namespace Rpg_Restapi.Dtos {
-  public class
-  CharacterDto {
+  public class GetCharacterDto {
     public int Id { get; set; }
     public string Name { get; set; } = "Frodo";
     public int HitPoints { get; set; } = 100;
