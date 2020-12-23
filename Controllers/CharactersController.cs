@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Rpg_Restapi.Models;
 
@@ -41,5 +43,27 @@ namespace Rpg_Restapi.Controllers {
       _characterList[index] = character;
       return NoContent ();
     }
+
+    [HttpPatch ("{id}")]
+    public IActionResult UpdatePartialCharacter (int id, JsonPatchDocument<Character> patchDoc) {
+      var check = _characterList.FirstOrDefault (c => c.Id == id);
+      if (check == null) return NotFound ();
+      patchDoc.ApplyTo (check);
+      if (!TryValidateModel (check)) {
+        return ValidationProblem (ModelState);
+      }
+      int index = _characterList.FindIndex (c => c.Id == id);
+      _characterList[index] = check;
+      return NoContent ();
+    }
+
+    [HttpDelete ("{id}")]
+    public IActionResult DeleteCharacter (int id) {
+      var check = _characterList.FirstOrDefault (c => c.Id == id);
+      if (check == null) return NotFound ();
+      _characterList.RemoveAll (c => c.Id == id);
+      return NoContent ();
+    }
+
   }
 }
