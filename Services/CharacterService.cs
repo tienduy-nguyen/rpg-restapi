@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Rpg_Restapi.Models;
 
 namespace Rpg_Restapi.Services {
@@ -12,17 +13,17 @@ namespace Rpg_Restapi.Services {
       new Character { Id = 2, Name = "Paul" },
       new Character { Id = 2, Name = "John" }
     };
-    public List<Character> AddCharacter (Character newCharacter) {
+    public Task<List<Character>> AddCharacter (Character newCharacter) {
       _characterList.Add (newCharacter);
-      return _characterList;
+      return Task.FromResult<List<Character>> (_characterList);
     }
 
-    public List<Character> GetAllCharacters () {
-      return _characterList;
+    public Task<List<Character>> GetAllCharacters () {
+      return Task.FromResult<List<Character>> (_characterList);
     }
 
-    public Character GetCharacterById (int id) {
-      return _characterList.FirstOrDefault (c => c.Id == id);
+    public Task<Character> GetCharacterById (int id) {
+      return Task.FromResult<Character> (_characterList.FirstOrDefault (c => c.Id == id));
     }
   }
 }
