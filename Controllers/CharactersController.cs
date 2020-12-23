@@ -28,15 +28,16 @@ namespace Rpg_Restapi.Controllers {
 
     [HttpPost]
     public async Task<ActionResult<Character>> CreateCharacter (Character newCharacter) {
-      var check = await _characterService.GetAllCharacters ().FirstOrDefault (c => c.Id == newCharacter.Id);
+      var charList = await _characterService.GetAllCharacters ();
+      var check = charList.FirstOrDefault (c => c.Id == newCharacter.Id);
       if (check != null) return Conflict (new { message = $"Character with id '{newCharacter.Id}' already existed!" });
-      _characterService.AddCharacter (newCharacter);
+      await _characterService.AddCharacter (newCharacter);
       return Ok (newCharacter);
     }
 
     [HttpPut ("{id}")]
-    public IActionResult UpdateCharacter (int id, Character character) {
-      var charList = _characterService.GetAllCharacters ();
+    public async Task<IActionResult> UpdateCharacter (int id, Character character) {
+      var charList = await _characterService.GetAllCharacters ();
       var check = charList.FirstOrDefault (c => c.Id == id);
       if (check == null) return NotFound ();
       int index = charList.FindIndex (c => c.Id == id);
@@ -46,9 +47,9 @@ namespace Rpg_Restapi.Controllers {
     }
 
     [HttpPatch ("{id}")]
-    public IActionResult UpdatePartialCharacter (int id, JsonPatchDocument<Character> patchDoc) {
-      var charList = _characterService.GetAllCharacters ();
-      var check = _characterService.GetAllCharacters ().FirstOrDefault (c => c.Id == id);
+    public async Task<IActionResult> UpdatePartialCharacter (int id, JsonPatchDocument<Character> patchDoc) {
+      var charList = await _characterService.GetAllCharacters ();
+      var check = charList.FirstOrDefault (c => c.Id == id);
       if (check == null) return NotFound ();
       patchDoc.ApplyTo (check);
       if (!TryValidateModel (check)) {
@@ -60,8 +61,8 @@ namespace Rpg_Restapi.Controllers {
     }
 
     [HttpDelete ("{id}")]
-    public IActionResult DeleteCharacter (int id) {
-      var charList = _characterService.GetAllCharacters ();
+    public async Task<IActionResult> DeleteCharacter (int id) {
+      var charList = await _characterService.GetAllCharacters ();
       var check = charList.FirstOrDefault (c => c.Id == id);
       if (check == null) return NotFound ();
       charList.RemoveAll (c => c.Id == id);
