@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using Rpg_Restapi.Data;
 using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi {
@@ -25,6 +26,9 @@ namespace Rpg_Restapi {
       services.AddControllers ()
         .AddNewtonsoftJson (options => options.UseMemberCasing ());
       // Handle json (for JsonPath)
+      services.AddDbContext<DataContext> (options => {
+        options.UseNpgsql (Configuration.GetConnectionString ("DefaultConnection"));
+      });
 
       // Auto mapper class - Dto
       services.AddAutoMapper (AppDomain.CurrentDomain.GetAssemblies ());
