@@ -5,40 +5,41 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Rpg_Restapi.Data;
 using Rpg_Restapi.Dtos;
 using Rpg_Restapi.Models;
-
 namespace Rpg_Restapi.Services {
 
   public class CharacterService : ICharacterService {
     private IMapper _mapper;
-    public CharacterService (IMapper mapper) {
+    private DataContext _context;
+    public CharacterService (IMapper mapper, DataContext context) {
       _mapper = mapper;
+      _context = context;
     }
-    private static List<Character> _characterList = new List<Character> {
-      new Character (),
-      new Character { Id = 1, Name = "Same" },
-      new Character { Id = 2, Name = "Paul" },
-      new Character { Id = 3, Name = "John" }
-    };
+
     public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters () {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
-      serviceResponse.Data = (_characterList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
+      var charList = await _context.Characters.ToListAsync ();
+      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
       return serviceResponse;
     }
 
     public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter (AddCharacterDto newCharacterDto) {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       Character character = _mapper.Map<Character> (newCharacterDto);
-      character.Id = _characterList.Max (c => c.Id) + 1;
-      _characterList.Add (character);
-      serviceResponse.Data = (_characterList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
+      _context.Characters.Add (character);
+      await _context.SaveChangesAsync ();
+
+      var charList = await _context.Characters.ToListAsync ();
+      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
       return serviceResponse;
     }
 
     public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById (int id) {
       ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
-      var charFound = _characterList.FirstOrDefault (c => c.Id == id);
+      var charFound = await _context.Characters.FindAsync (id);
       if (charFound == null) {
         serviceResponse.Success = false;
         serviceResponse.Message = $"Character with id '{id}' not found!";
@@ -48,18 +49,18 @@ namespace Rpg_Restapi.Services {
       return serviceResponse;
     }
 
-    public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (UpdateCharacterDto updatedCharacterDto) {
+    public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (int id, UpdateCharacterDto updatedCharacterDto) {
       ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
+      if (!CharacterExists (updatedCharacterDto.Id)) {
+        serviceResponse.Success = false;
+        serviceResponse.Message = $"Character with id '{updatedCharacterDto.Id}' not found!";
+        return serviceResponse;
+      }
+      var updateCharacter = _mapper.Map<Character> (updatedCharacterDto);
+      _context.Entry (updateCharacter).State = EntityState.Modified;
       try {
-        var charFound = _characterList.FirstOrDefault (c => c.Id == updatedCharacterDto.Id);
-        if (charFound == null) {
-          serviceResponse.Success = false;
-          serviceResponse.Message = $"Character with id '{updatedCharacterDto.Id}' not found!";
-          return serviceResponse;
-        }
-        var index = _characterList.FindIndex (c => c.Id == charFound.Id);
+        await _context.SaveChangesAsync ();
         var charUpdated = _mapper.Map<Character> (updatedCharacterDto);
-        _characterList[index] = charUpdated;
         serviceResponse.Data = _mapper.Map<GetCharacterDto> (charUpdated);
       } catch (Exception ex) {
         serviceResponse.Success = false;
@@ -68,20 +69,22 @@ namespace Rpg_Restapi.Services {
       return serviceResponse;
     }
 
-    public async Task<ServiceResponse<GetCharacterDto>> UpdatePartialCharacter (int id, JsonPatchDocument<UpdateCharacterDto> patchCharacterDto) {
+    public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (int id, JsonPatchDocument<UpdateCharacterDto> patchCharacterDto) {
       ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
+      if (!CharacterExists (id)) {
+        serviceResponse.Success = false;
+        serviceResponse.Message = $"Character with id '{id}' not found!";
+        return serviceResponse;
+      }
+
       try {
-        var charFound = _characterList.FirstOrDefault (c => c.Id == id);
-        if (charFound == null) {
-          serviceResponse.Success = false;
-          serviceResponse.Message = $"Character with id '{id}' not found!";
-          return serviceResponse;
-        }
-        var index = _characterList.FindIndex (c => c.Id == charFound.Id);
+
+        var charFound = await _context.Characters.FindAsync (id);
         var charFoundDto = _mapper.Map<UpdateCharacterDto> (charFound);
         patchCharacterDto.ApplyTo (charFoundDto);
         var charResult = _mapper.Map<Character> (charFoundDto);
-        _characterList[index] = charResult;
+        _context.Entry (charResult).State = EntityState.Modified;
+        await _context.SaveChangesAsync ();
         serviceResponse.Data = _mapper.Map<GetCharacterDto> (charResult);
       } catch (Exception ex) {
         serviceResponse.Success = false;
@@ -93,20 +96,26 @@ namespace Rpg_Restapi.Services {
     public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter (int id) {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       try {
-        var charFound = _characterList.FirstOrDefault (c => c.Id == id);
+        var charFound = _context.Characters.FindAsync (id);
         if (charFound == null) {
           serviceResponse.Success = false;
           serviceResponse.Message = $"Character with id '{id}' not found!";
           return serviceResponse;
         }
-        _characterList.RemoveAll (c => c.Id == id);
-        serviceResponse.Data = (_characterList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
+        _context.Remove (charFound);
+        await _context.SaveChangesAsync ();
+        var charList = await _context.Characters.ToListAsync ();
+        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
       } catch (Exception ex) {
 
         serviceResponse.Success = false;
         serviceResponse.Message = ex.Message;
       }
       return serviceResponse;
+    }
+
+    private bool CharacterExists (int id) {
+      return _context.Characters.Any (e => e.Id == id);
     }
   }
 }
