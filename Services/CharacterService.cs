@@ -72,7 +72,7 @@ namespace Rpg_Restapi.Services {
     public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter (int id) {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       try {
-        var charFound = _context.Characters.FindAsync (id);
+        var charFound = await _context.Characters.FindAsync (id);
         if (charFound == null) {
           serviceResponse.Success = false;
           serviceResponse.Message = $"Character with id '{id}' not found!";
