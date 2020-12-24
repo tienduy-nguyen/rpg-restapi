@@ -9,8 +9,7 @@ namespace Rpg_Restapi.Services {
     Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters ();
     Task<ServiceResponse<GetCharacterDto>> GetCharacterById (int id);
     Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter (AddCharacterDto newCharacterDto);
-    Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (UpdateCharacterDto updatedCharacter);
-    Task<ServiceResponse<GetCharacterDto>> UpdatePartialCharacter (int id, JsonPatchDocument<UpdateCharacterDto> updatedCharacter);
+    Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (int id, UpdateCharacterDto updatedCharacter);
     Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter (int id);
   }
 }

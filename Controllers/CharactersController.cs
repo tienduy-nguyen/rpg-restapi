@@ -32,18 +32,12 @@ namespace Rpg_Restapi.Controllers {
       return Ok (await _characterService.AddCharacter (newCharacterDto));
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateCharacter (UpdateCharacterDto updateCharacterDto) {
-      ServiceResponse<GetCharacterDto> response = await _characterService.UpdateCharacter (updateCharacterDto);
-      if (response.Data == null) {
-        return NotFound (response);
+    [HttpPut ("{id}")]
+    public async Task<IActionResult> UpdateCharacter (int id, UpdateCharacterDto updateCharacterDto) {
+      ServiceResponse<GetCharacterDto> response = await _characterService.UpdateCharacter (id, updateCharacterDto);
+      if (id != updateCharacterDto.Id) {
+        return BadRequest (response);
       }
-      return Ok (response);
-    }
-
-    [HttpPatch ("{id}")]
-    public async Task<IActionResult> UpdatePartialCharacter (int id, JsonPatchDocument<UpdateCharacterDto> patchDoc) {
-      ServiceResponse<GetCharacterDto> response = await _characterService.UpdatePartialCharacter (id, patchDoc);
       if (response.Data == null) {
         return NotFound (response);
       }

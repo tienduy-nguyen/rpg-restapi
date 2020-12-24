@@ -69,30 +69,6 @@ namespace Rpg_Restapi.Services {
       return serviceResponse;
     }
 
-    public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (int id, JsonPatchDocument<UpdateCharacterDto> patchCharacterDto) {
-      ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
-      if (!CharacterExists (id)) {
-        serviceResponse.Success = false;
-        serviceResponse.Message = $"Character with id '{id}' not found!";
-        return serviceResponse;
-      }
-
-      try {
-
-        var charFound = await _context.Characters.FindAsync (id);
-        var charFoundDto = _mapper.Map<UpdateCharacterDto> (charFound);
-        patchCharacterDto.ApplyTo (charFoundDto);
-        var charResult = _mapper.Map<Character> (charFoundDto);
-        _context.Entry (charResult).State = EntityState.Modified;
-        await _context.SaveChangesAsync ();
-        serviceResponse.Data = _mapper.Map<GetCharacterDto> (charResult);
-      } catch (Exception ex) {
-        serviceResponse.Success = false;
-        serviceResponse.Message = ex.Message;
-      }
-      return serviceResponse;
-    }
-
     public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter (int id) {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       try {
