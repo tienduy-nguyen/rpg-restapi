@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Rpg_Restapi.Models;
 using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi.Controllers {
+  [Authorize]
   [Route ("api/[controller]")]
   [ApiController]
   public class CharactersController : ControllerBase {
@@ -17,6 +19,7 @@ namespace Rpg_Restapi.Controllers {
     }
     private readonly ICharacterService _characterService;
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Character>>> GetAll () {
       return Ok (await _characterService.GetAllCharacters ());

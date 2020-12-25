@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace Rpg_Restapi.Data {
     /// </summary>
     /// <param name="username"></param>
     /// <param name="password"></param>
-    /// <returns>Service response with data user token</returns>
+    /// <returns>Service response with a data user token</returns>
     public async Task<ServiceResponse<string>> Login (string username, string password) {
       ServiceResponse<string> response = new ServiceResponse<string> ();
       User user = await _context.Users.FirstOrDefaultAsync (u => u.Username.ToLower () == username.ToLower ());
@@ -36,7 +37,7 @@ namespace Rpg_Restapi.Data {
         response.Message = "Invalid credentials";
         return response;
       }
-      response.Data = user.Id.ToString ();
+      response.Data = CreateToken (user);
       return response;
 
     }
@@ -46,9 +47,9 @@ namespace Rpg_Restapi.Data {
     /// </summary>
     /// <param name="user"></param>
     /// <param name="password"></param>
-    /// <returns>Service response with data user id</returns>
-    public async Task<ServiceResponse<int>> Register (User user, string password) {
-      ServiceResponse<int> response = new ServiceResponse<int> ();
+    /// <returns>Service response with a data user token</returns>
+    public async Task<ServiceResponse<string>> Register (User user, string password) {
+      ServiceResponse<string> response = new ServiceResponse<string> ();
       if (await UserExists (user.Username)) {
         response.Success = false;
         response.Message = $"User with '{user.Username}' already exists";
@@ -59,7 +60,7 @@ namespace Rpg_Restapi.Data {
       user.PasswordSalt = passwordSalt;
       await _context.Users.AddAsync (user);
       await _context.SaveChangesAsync ();
-      response.Data = user.Id;
+      response.Data = CreateToken (user);
       return response;
     }
 
@@ -71,20 +72,36 @@ namespace Rpg_Restapi.Data {
       return true;
     }
 
-    // /// <summary>
-    // /// Create a Jwt token
-    // /// </summary>
-    // /// <param name="user"></param>
-    // /// <returns></returns>
-    // private string CreateToken (User user) {
-    //   List<Claim> claims = new List<Claim> {
-    //     new Claim (ClaimTypes.NameIdentifier, user.Id.ToString ()),
-    //     new Claim (ClaimTypes.Name, user.Username),
-    //     new Claim (ClaimTypes.Role, user.Role)
-    //   };
+    /// <summary>
+    /// Create a Jwt token
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    private string CreateToken (User user) {
+      List<Claim> claims = new List<Claim> {
+        new Claim (ClaimTypes.NameIdentifier, user.Id.ToString ()),
+        new Claim (ClaimTypes.Name, user.Username),
+        new Claim (ClaimTypes.Role, user.Role)
+      };
 
-    //   SymmetricSecurityKey key = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (_confi))
-    // }
+      // Get token secret from user-secrets
+      SymmetricSecurityKey key = new SymmetricSecurityKey (
+        Encoding.UTF8.GetBytes (_configuration.GetSection ("AppSettings:Token").Value)
+      );
+
+      SigningCredentials creds = new SigningCredentials (key, SecurityAlgorithms.HmacSha512Signature);
+
+      SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor {
+        Subject = new ClaimsIdentity (claims),
+        Expires = DateTime.Now.AddDays (1),
+        SigningCredentials = creds
+      };
+
+      JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler ();
+      SecurityToken token = tokenHandler.CreateToken (tokenDescriptor);
+
+      return tokenHandler.WriteToken (token);
+    }
 
   }
 }

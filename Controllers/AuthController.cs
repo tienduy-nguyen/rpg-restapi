@@ -25,7 +25,7 @@ namespace Rpg_Restapi.Controllers {
 
     [HttpPost ("register")]
     public async Task<IActionResult> Register (UserRegisterDto request) {
-      ServiceResponse<int> response = await _authRepo.Register (
+      ServiceResponse<string> response = await _authRepo.Register (
         new User { Username = request.Username }, request.Password
       );
       if (!response.Success) {
