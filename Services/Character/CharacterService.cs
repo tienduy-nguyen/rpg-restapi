@@ -35,12 +35,11 @@ namespace Rpg_Restapi.Services {
     /// <returns>List of characters</returns>
     public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters () {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
-      var claim = ClaimTypes.NameIdentifier;
       string role = GetUserRole ();
       var charList = role.Equals ("Admin") ?
         await _context.Characters.ToListAsync () :
         await _context.Characters.Where (c => c.UserId == GetUserId ()).ToListAsync ();
-      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
+      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
       return serviceResponse;
     }
 
@@ -60,7 +59,7 @@ namespace Rpg_Restapi.Services {
 
       var charList = await _context.Characters.Where (c => c.UserId == userId).ToListAsync ();
       // Convert character to Character Data Transfer object
-      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
+      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
       return serviceResponse;
     }
 
@@ -113,7 +112,7 @@ namespace Rpg_Restapi.Services {
         _context.Characters.Remove (charFound);
         await _context.SaveChangesAsync ();
         var charList = await _context.Characters.Where (c => c.UserId == GetUserId ()).ToListAsync ();
-        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).ToList ();
+        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
       } catch (Exception ex) {
 
         serviceResponse.Success = false;
