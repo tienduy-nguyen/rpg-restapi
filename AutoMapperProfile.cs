@@ -14,6 +14,7 @@ namespace Rpg_Restapi {
       CreateMap<AddWeaponDto, Weapon> ();
       CreateMap<Weapon, GetWeaponDto> ();
       CreateMap<AddCharacterSkillDto, CharacterSkill> ();
+      CreateMap<Skill, GetSkillDto> ();
     }
   }
 }
