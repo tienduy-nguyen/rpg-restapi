@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -40,6 +42,14 @@ namespace Rpg_Restapi.Services {
         response.Message = ex.Message;
 
       }
+      return response;
+    }
+
+    public async Task<ServiceResponse<List<GetWeaponDto>>> GetAllWeapons () {
+      ServiceResponse<List<GetWeaponDto>> response = new ServiceResponse<List<GetWeaponDto>> ();
+      var weaponList = await _context.Weapons.ToListAsync ();
+      response.Data = weaponList.Select (w => _mapper.Map<GetWeaponDto> (w)).ToList ();
+      response.Success = true;
       return response;
     }
   }

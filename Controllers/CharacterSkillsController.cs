@@ -14,6 +14,8 @@ namespace Rpg_Restapi.Controllers {
     public CharacterSkillsController (ICharacterSkillService weaponService) {
       _characterSkillService = weaponService;
     }
+
+    [HttpPost]
     public async Task<IActionResult> AddCharacterSkill (AddCharacterSkillDto newCharacterSkillDto) {
       ServiceResponse<GetCharacterDto> response = await _characterSkillService.AddCharacterSkill (newCharacterSkillDto);
       if (!response.Success) {

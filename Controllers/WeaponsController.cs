@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,11 @@ namespace Rpg_Restapi.Controllers {
         return BadRequest (response);
       }
       return Ok (response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllWeapons () {
+      return Ok (await _weaponService.GetAllWeapons ());
     }
 
   }
