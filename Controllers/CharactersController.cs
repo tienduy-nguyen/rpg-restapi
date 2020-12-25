@@ -10,7 +10,7 @@ using Rpg_Restapi.Models;
 using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi.Controllers {
-  [Authorize (Roles = "Player,Admin")]
+  [Authorize]
   [Route ("api/[controller]")]
   [ApiController]
   public class CharactersController : ControllerBase {
@@ -19,7 +19,6 @@ namespace Rpg_Restapi.Controllers {
     }
     private readonly ICharacterService _characterService;
 
-    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Character>>> GetAll () {
       return Ok (await _characterService.GetAllCharacters ());
