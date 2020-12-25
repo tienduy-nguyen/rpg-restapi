@@ -48,9 +48,17 @@ namespace Rpg_Restapi.Data {
     /// <param name="password"></param>
     /// <returns>Service response with data user id</returns>
     public async Task<ServiceResponse<int>> Register (User user, string password) {
+      ServiceResponse<int> response = new ServiceResponse<int> ();
+      if (await UserExists (user.Username)) {
+        response.Success = false;
+        response.Message = $"User with '{user.Username}' already exists";
+        return response;
+      }
+      Utilities.CreatePasswordHash (password, out byte[] passwordHash, out byte[] passwordSalt);
+      user.PasswordHash = passwordHash;
+      user.PasswordSalt = passwordSalt;
       await _context.Users.AddAsync (user);
       await _context.SaveChangesAsync ();
-      ServiceResponse<int> response = new ServiceResponse<int> ();
       response.Data = user.Id;
       return response;
     }
