@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Rpg_Restapi.Models;
@@ -15,10 +16,37 @@ namespace Rpg_Restapi.Data {
       _configuration = configuration;
       _context = context;
     }
+
+    /// <summary>
+    /// Login user
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <returns>Service response with data user token</returns>
     public async Task<ServiceResponse<string>> Login (string username, string password) {
-      throw new System.NotImplementedException ();
+      ServiceResponse<string> response = new ServiceResponse<string> ();
+      User user = await _context.Users.FirstOrDefaultAsync (u => u.Username.ToLower () == username.ToLower ());
+      if (user == null) {
+        response.Success = false;
+        response.Message = $"User with '{username}' not found";
+        return response;
+      }
+      if (!Utilities.VerifyPasswordHash (password, user.PasswordHash, user.PasswordSalt)) {
+        response.Success = false;
+        response.Message = "Invalid credentials";
+        return response;
+      }
+      response.Data = user.Id.ToString ();
+      return response;
+
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="user"></param>
+    /// <param name="password"></param>
+    /// <returns>Service response with data user id</returns>
     public async Task<ServiceResponse<int>> Register (User user, string password) {
       await _context.Users.AddAsync (user);
       await _context.SaveChangesAsync ();
@@ -28,7 +56,11 @@ namespace Rpg_Restapi.Data {
     }
 
     public async Task<bool> UserExists (string username) {
-      throw new System.NotImplementedException ();
+      var isExist = await _context.Users.AnyAsync (u => u.Username.ToLower () == username.ToLower ());
+      if (!isExist) {
+        return false;
+      }
+      return true;
     }
 
     // /// <summary>
