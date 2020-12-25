@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Rpg_Restapi.Models;
 
 namespace Rpg_Restapi.Data {
@@ -29,5 +30,21 @@ namespace Rpg_Restapi.Data {
     public async Task<bool> UserExists (string username) {
       throw new System.NotImplementedException ();
     }
+
+    // /// <summary>
+    // /// Create a Jwt token
+    // /// </summary>
+    // /// <param name="user"></param>
+    // /// <returns></returns>
+    // private string CreateToken (User user) {
+    //   List<Claim> claims = new List<Claim> {
+    //     new Claim (ClaimTypes.NameIdentifier, user.Id.ToString ()),
+    //     new Claim (ClaimTypes.Name, user.Username),
+    //     new Claim (ClaimTypes.Role, user.Role)
+    //   };
+
+    //   SymmetricSecurityKey key = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (_confi))
+    // }
+
   }
 }
