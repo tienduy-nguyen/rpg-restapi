@@ -7,7 +7,7 @@ using Rpg_Restapi.Data;
 using Rpg_Restapi.Dtos;
 using Rpg_Restapi.Models;
 
-namespace Rpg_Restapi.Services.CharacterSkillService {
+namespace Rpg_Restapi.Services {
   public class CharacterSkillService : ICharacterSkillService {
     private readonly IMapper _mapper;
     private readonly DataContext _context;
