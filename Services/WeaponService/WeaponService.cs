@@ -7,7 +7,7 @@ using Rpg_Restapi.Data;
 using Rpg_Restapi.Dtos;
 using Rpg_Restapi.Models;
 
-namespace Rpg_Restapi.Services.WeaponService {
+namespace Rpg_Restapi.Services {
   public class WeaponService : IWeaponService {
     private readonly DataContext _context;
     private readonly IMapper _mapper;
