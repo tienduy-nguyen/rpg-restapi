@@ -25,17 +25,20 @@ namespace Rpg_Restapi {
     public void ConfigureServices (IServiceCollection services) {
       services.AddControllers ()
         .AddNewtonsoftJson (options => options.UseMemberCasing ());
-      // Handle json (for JsonPath)
+
+      /* Handle json (for JsonPath) */
       services.AddDbContext<DataContext> (options => {
         options.UseNpgsql (Configuration.GetConnectionString ("DefaultConnection"));
       });
 
-      // Auto mapper class - Dto
+      /*  Auto mapper class - Dto*/
       services.AddAutoMapper (AppDomain.CurrentDomain.GetAssemblies ());
-      // Denpendency Injection for service
-      services.AddScoped<ICharacterService, CharacterService> ();
 
-      // Swagger doc
+      /* Denpendency Injection for service */
+      services.AddScoped<ICharacterService, CharacterService> ();
+      services.AddScoped<IAuthRepository, AuthRepository> ();
+
+      /* Swagger doc */
       services.AddSwaggerGen (c => {
         c.SwaggerDoc ("v1", new OpenApiInfo {
           Title = "Role Playing Game API",
