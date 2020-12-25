@@ -11,8 +11,8 @@ using Rpg_Restapi.Models;
 
 namespace Rpg_Restapi.Data {
   public class AuthRepository : IAuthRepository {
-    private readonly DataContext _context;
-    private readonly IConfiguration _configuration;
+    private DataContext _context;
+    private IConfiguration _configuration;
     public AuthRepository (DataContext context, IConfiguration configuration) {
       _configuration = configuration;
       _context = context;
@@ -84,7 +84,6 @@ namespace Rpg_Restapi.Data {
         new Claim (ClaimTypes.Role, user.Role)
       };
 
-      // Get token secret from user-secrets
       SymmetricSecurityKey key = new SymmetricSecurityKey (
         Encoding.UTF8.GetBytes (_configuration.GetSection ("AppSettings:Token").Value)
       );

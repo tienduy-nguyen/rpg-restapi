@@ -10,6 +10,6 @@ namespace Rpg_Restapi.Models {
     public List<Character> Characters { get; set; }
 
     [Required]
-    public string Role { get; set; } = "User";
+    public string Role { get; set; } = "Player";
   }
 }

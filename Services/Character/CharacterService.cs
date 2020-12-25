@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,11 @@ namespace Rpg_Restapi.Services {
   public class CharacterService : ICharacterService {
     private IMapper _mapper;
     private DataContext _context;
-    public CharacterService (IMapper mapper, DataContext context) {
+    private IHttpContextAccessor _httpcontextAccessor;
+    public CharacterService (IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessort) {
       _mapper = mapper;
       _context = context;
+      _httpcontextAccessor = httpContextAccessort;
     }
 
     public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters () {

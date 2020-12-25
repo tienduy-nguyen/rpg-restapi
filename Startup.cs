@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,6 +53,7 @@ namespace Rpg_Restapi {
       /* Denpendency Injection for service */
       services.AddScoped<ICharacterService, CharacterService> ();
       services.AddScoped<IAuthRepository, AuthRepository> ();
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor> ();
 
       /* Swagger doc */
       services.AddSwaggerGen (c => {

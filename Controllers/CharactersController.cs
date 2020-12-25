@@ -10,7 +10,7 @@ using Rpg_Restapi.Models;
 using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi.Controllers {
-  [Authorize]
+  [Authorize (Roles = "Player,Admin")]
   [Route ("api/[controller]")]
   [ApiController]
   public class CharactersController : ControllerBase {
