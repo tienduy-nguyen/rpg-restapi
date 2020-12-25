@@ -9,9 +9,9 @@ namespace Rpg_Restapi.Controllers {
   [Authorize]
   [Route ("api/[controller]")]
   [ApiController]
-  public class CharacterSkillController : ControllerBase {
+  public class CharacterSkillsController : ControllerBase {
     private readonly ICharacterSkillService _characterSkillService;
-    public CharacterSkillController (ICharacterSkillService weaponService) {
+    public CharacterSkillsController (ICharacterSkillService weaponService) {
       _characterSkillService = weaponService;
     }
     public async Task<IActionResult> AddCharacterSkill (AddCharacterSkillDto newCharacterSkillDto) {

@@ -6,8 +6,8 @@ using Rpg_Restapi.Models;
 namespace Rpg_Restapi {
   public class AutoMapperProfile : Profile {
     public AutoMapperProfile () {
-      CreateMap<Character, GetCharacterDto> ();
-      CreateMap<GetCharacterDto, Character> ();
+      CreateMap<Character, GetCharacterDto> ()
+        .ForMember (dto => dto.Skills, c => c.MapFrom (c => c.CharacterSkills.Select (cs => cs.Skill)));
       CreateMap<AddCharacterDto, Character> ();
       CreateMap<UpdateCharacterDto, Character> ();
       CreateMap<Character, UpdateCharacterDto> ();
