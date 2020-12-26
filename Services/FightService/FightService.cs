@@ -116,6 +116,7 @@ namespace Rpg_Restapi.Services {
           .Where (c => request.CharacterIds.Contains (c.Id)).ToListAsync ();
 
         bool defeated = false;
+        // The while loop stops when the first character is defeated
         while (!defeated) {
           foreach (Character attacker in characters) {
             List<Character> opponents = characters.Where (c => c.Id != attacker.Id).ToList ();
@@ -164,7 +165,7 @@ namespace Rpg_Restapi.Services {
       return response;
     }
 
-    public async Task<ServiceResponse<List<HighscoreDto>>> GetHighScore () {
+    public async Task<ServiceResponse<List<HighscoreDto>>> GetHighscore () {
       List<Character> characters = await _context.Characters
         .Where (c => c.Fights > 0)
         .OrderByDescending (c => c.Victories)
