@@ -21,7 +21,7 @@ namespace Rpg_Restapi.Services {
     private int _GetUserId () => int.Parse (_httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
     private string _GetUserRole () => _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.Role);
 
-    /* Contructor */
+    /* Constructor */
     public CharacterService (IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor) {
       _mapper = mapper;
       _context = context;

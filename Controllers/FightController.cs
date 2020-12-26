@@ -44,6 +44,7 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetHighscore () {
       return Ok (await _fightService.GetHighscore ());
