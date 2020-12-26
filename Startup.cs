@@ -47,6 +47,7 @@ namespace Rpg_Restapi {
       services.AddScoped<ICharacterSkillService, CharacterSkillService> ();
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor> ();
       services.AddScoped<IFightService, FightService> ();
+      services.AddScoped<ISkillService, SkillService> ();
 
       /* Swagger doc */
       services.AddSwaggerGen (c => {
@@ -75,6 +76,11 @@ namespace Rpg_Restapi {
 
           }
         });
+
+        // Set the comments path for the Swagger JSON and UI.
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine (AppContext.BaseDirectory, xmlFile);
+        c.IncludeXmlComments (xmlPath);
 
       });
 
