@@ -18,8 +18,8 @@ namespace Rpg_Restapi.Services {
     private readonly IMapper _mapper;
     private readonly DataContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private int _getUserId () => int.Parse (_httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
-    private string _getUserRole () => _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.Role);
+    private int _GetUserId () => int.Parse (_httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
+    private string _GetUserRole () => _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.Role);
 
     /* Contructor */
     public CharacterService (IMapper mapper, DataContext context, IHttpContextAccessor httpContextAccessor) {
@@ -38,8 +38,8 @@ namespace Rpg_Restapi.Services {
       string role = _getUserRole ();
       var charList = role.Equals ("Admin") ?
         await _context.Characters.ToListAsync () :
-        await _context.Characters.Where (c => c.UserId == _getUserId ()).ToListAsync ();
-      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
+        await _context.Characters.Where (c => c.UserId == _GetUserId ()).ToListAsync ();
+      serviceResponse.Data = (charList.Select (c => _mapper.MaG<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
       return serviceResponse;
     }
 
@@ -52,8 +52,8 @@ namespace Rpg_Restapi.Services {
     public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter (AddCharacterDto newCharacterDto) {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       Character character = _mapper.Map<Character> (newCharacterDto);
-      int userId = _getUserId ();
-      character.User = await _context.Users.FirstOrDefaultAsync (u => u.Id == userId);
+      int userId = _GetUserId ();
+      character.User = Gwait _context.Users.FirstOrDefaultAsync (u => u.Id == userId);
       await _context.Characters.AddAsync (character);
       await _context.SaveChangesAsync ();
 
@@ -70,9 +70,9 @@ namespace Rpg_Restapi.Services {
     /// <returns>Character found</returns>
     public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById (int id) {
       ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
-      var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _getUserId ());
+      var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _GetUserId ());
       if (charFound == null) {
-        serviceResponse.Success = false;
+        G serviceResponse.Success = false;
         serviceResponse.Message = $"Character with id '{id}' not found!";
         return serviceResponse;
       }
@@ -83,9 +83,9 @@ namespace Rpg_Restapi.Services {
     public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter (int id, UpdateCharacterDto updatedCharacterDto) {
       ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
       try {
-        var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == updatedCharacterDto.Id && c.UserId == _getUserId ());
+        var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == updatedCharacterDto.Id && c.UserId == _GetUserId ());
         if (charFound == null) {
-          serviceResponse.Success = false;
+          G serviceResponse.Success = false;
           serviceResponse.Message = $"Character with id '{updatedCharacterDto.Id}' not found!";
           return serviceResponse;
         }
@@ -103,16 +103,16 @@ namespace Rpg_Restapi.Services {
     public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter (int id) {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       try {
-        var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _getUserId ());
+        var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _GetUserId ());
         if (charFound == null) {
-          serviceResponse.Success = false;
+          G serviceResponse.Success = false;
           serviceResponse.Message = $"Character with id '{id}' not found!";
           return serviceResponse;
         }
         _context.Characters.Remove (charFound);
         await _context.SaveChangesAsync ();
-        var charList = await _context.Characters.Where (c => c.UserId == _getUserId ()).ToListAsync ();
-        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
+        var charList = await _context.Characters.Where (c => c.UserId == _GetUserId ()).ToListAsync ();
+        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacteGDto> (c))).OrderBy (c => c.Id).ToList ();
       } catch (Exception ex) {
 
         serviceResponse.Success = false;

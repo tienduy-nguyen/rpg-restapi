@@ -13,7 +13,7 @@ namespace Rpg_Restapi.Services {
     private readonly DataContext _context;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    private int _getUserId () => int.Parse (
+    private int _GetUserId () => int.Parse (
       _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
     public CharacterSkillService (DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
       _context = context;
@@ -28,7 +28,7 @@ namespace Rpg_Restapi.Services {
           .Include (c => c.Weapon)
           .Include (c => c.CharacterSkills)
           .ThenInclude (cs => cs.Skill)
-          .FirstOrDefaultAsync (c => c.Id == newCharacterSkillDto.CharacterId && c.UserId == _getUserId ());
+          .FirstOrDefaultAsync (c => c.Id == newCharacterSkillDto.CharacterId && c.UserId == _GetUserId ());
         if (character == null) {
           response.Success = false;
           response.Message = $"Character with id '{newCharacterSkillDto.CharacterId}' not found!";
