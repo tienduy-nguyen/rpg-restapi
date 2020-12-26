@@ -46,6 +46,7 @@ namespace Rpg_Restapi {
       services.AddScoped<IWeaponService, WeaponService> ();
       services.AddScoped<ICharacterSkillService, CharacterSkillService> ();
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor> ();
+      services.AddScoped<IFightService, FightService> ();
 
       /* Swagger doc */
       services.AddSwaggerGen (c => {
