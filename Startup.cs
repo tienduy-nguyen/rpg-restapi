@@ -43,11 +43,11 @@ namespace Rpg_Restapi {
       /* Denpendency Injection for service */
       services.AddScoped<ICharacterService, CharacterService> ();
       services.AddScoped<IAuthRepository, AuthRepository> ();
+      services.AddScoped<ISkillService, SkillService> ();
       services.AddScoped<IWeaponService, WeaponService> ();
       services.AddScoped<ICharacterSkillService, CharacterSkillService> ();
       services.AddSingleton<IHttpContextAccessor, HttpContextAccessor> ();
       services.AddScoped<IFightService, FightService> ();
-      services.AddScoped<ISkillService, SkillService> ();
 
       /* Swagger doc */
       services.AddSwaggerGen (c => {

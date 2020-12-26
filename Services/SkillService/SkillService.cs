@@ -9,11 +9,9 @@ using Rpg_Restapi.Models;
 namespace Rpg_Restapi.Services {
   public class SkillService : ISkillService {
     private readonly DataContext _context;
-    private readonly ISkillService _skillService;
     private readonly IMapper _mapper;
-    public SkillService (DataContext context, ISkillService skillService, IMapper mapper) {
+    public SkillService (DataContext context, IMapper mapper) {
       _context = context;
-      _skillService = skillService;
       _mapper = mapper;
     }
 

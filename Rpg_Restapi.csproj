@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Rpg_Restapi</RootNamespace>
-    <UserSecretsId>cdb0e4d5-07ef-40dd-961e-c974eb136a9e</UserSecretsId>
-     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <UserSecretsId>cdb0e4d5-07ef-40dd-961e-c974eb136a9e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
