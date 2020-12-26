@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Rpg_Restapi.Models;
 namespace Rpg_Restapi.Dtos {
   public class GetCharacterDto {
@@ -9,5 +10,6 @@ namespace Rpg_Restapi.Dtos {
     public int Intelligence { get; set; } = 10;
     public RpgClass Class { get; set; } = RpgClass.Knight;
     public GetWeaponDto Weapon { get; set; }
+    public List<GetSkillDto> Skills { get; set; }
   }
 }

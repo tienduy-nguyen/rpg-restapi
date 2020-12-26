@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Rpg_Restapi.Models {
   public class Character {
     public int Id { get; set; }
@@ -10,5 +12,6 @@ namespace Rpg_Restapi.Models {
     public User User { get; set; }
     public int UserId { get; set; }
     public Weapon Weapon { get; set; }
+    public List<CharacterSkill> CharacterSkills { get; set; }
   }
 }
