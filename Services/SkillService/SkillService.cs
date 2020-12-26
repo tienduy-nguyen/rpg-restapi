@@ -48,11 +48,34 @@ namespace Rpg_Restapi.Services {
     }
 
     public async Task<ServiceResponse<GetSkillDto>> UpdateSkill (int id, UpdateSkillDto updateSkillDto) {
-      throw new System.NotImplementedException ();
+      ServiceResponse<GetSkillDto> response = new ServiceResponse<GetSkillDto> ();
+      var skill = await _context.Skills.FirstOrDefaultAsync (s => s.Id == id);
+      if (skill == null) {
+        response.Success = false;
+        response.Message = $"Skill with id {id} not found";
+        return response;
+      }
+      var updateSkill = _mapper.Map<Skill> (updateSkillDto);
+      _context.Entry (updateSkill).State = EntityState.Modified;
+      await _context.SaveChangesAsync ();
+      response.Data = _mapper.Map<GetSkillDto> (updateSkill);
+
+      return response;
     }
 
     public async Task<ServiceResponse<List<GetSkillDto>>> DeleteSkill (int id) {
-      throw new System.NotImplementedException ();
+      ServiceResponse<List<GetSkillDto>> response = new ServiceResponse<List<GetSkillDto>> ();
+      var skill = await _context.Skills.FirstOrDefaultAsync (s => s.Id == id);
+      if (skill == null) {
+        response.Success = false;
+        response.Message = $"Skill with id {id} not found";
+        return response;
+      }
+      _context.Skills.Remove (skill);
+      await _context.SaveChangesAsync ();
+      var skillList = await _context.Skills.ToListAsync ();
+      response.Data = skillList.Select (s => _mapper.Map<GetSkillDto> (s)).ToList ();
+      return response;
     }
   }
 }
