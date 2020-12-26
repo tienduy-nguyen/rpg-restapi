@@ -105,12 +105,22 @@ namespace Rpg_Restapi.Services {
       return response;
 
     }
-
-    public async Task<ServiceResponse<List<HighscoreDto>>> GetHighScore () {
-      throw new System.NotImplementedException ();
-    }
     public async Task<ServiceResponse<FightResultDto>> Fight (FightRequestDto request) {
       throw new System.NotImplementedException ();
+    }
+
+    public async Task<ServiceResponse<List<HighscoreDto>>> GetHighScore () {
+      List<Character> characters = await _context.Characters
+        .Where (c => c.Fights > 0)
+        .OrderByDescending (c => c.Victories)
+        .ThenBy (c => c.Defeats)
+        .ToListAsync ();
+
+      var response = new ServiceResponse<List<HighscoreDto>> {
+        Data = characters.Select (c => _mapper.Map<HighscoreDto> (c)).ToList ()
+      };
+
+      return response;
     }
 
     /* Private helpers methods */
