@@ -121,20 +121,22 @@ namespace Rpg_Restapi.Services {
           foreach (Character attacker in characters) {
             List<Character> opponents = characters.Where (c => c.Id != attacker.Id).ToList ();
             // Get random opponent to attack, random index from 0 to count item of list opponent
-            Character opponent = opponents[new Random ().Next (opponents.Count)];
+            Character opponent = opponents[new Random ().Next (0, opponents.Count)];
+
             int damage = 0;
             string attackUsed = string.Empty;
             // Random between 0 & 1, if == 0, choose weapon
-            bool useWeapon = new Random ().Next (2) == 0;
+            bool useWeapon = new Random ().Next (0, 2) == 0;
             if (useWeapon) {
               attackUsed = attacker.Weapon.Name;
               damage = _DoWeaponAttack (attacker, opponent);
             } else {
-              int randomSkill = new Random ().Next (attacker.CharacterSkills.Count);
+              int randomSkill = new Random ().Next (0, attacker.CharacterSkills.Count);
               attackUsed = attacker.CharacterSkills[randomSkill].Skill.Name;
               damage = _DoSkillAttack (attacker, opponent, attacker.CharacterSkills[randomSkill]);
             }
-            response.Data.Log.Add ($"{attacker.Name} attacks {opponent.Name} using {attackUsed} with {damage} damage.");
+
+            response.Data.Log.Add ($"{attacker.Name} attacks {opponent.Name} using {attackUsed} with {(damage >= 0 ? damage : 0)} damage.");
 
             if (opponent.HitPoints <= 0) {
               defeated = true;
@@ -144,11 +146,8 @@ namespace Rpg_Restapi.Services {
               response.Data.Log.Add ($"{attacker.Name} wins with {attacker.HitPoints} HP left!");
               break;
             }
-
           }
-
         }
-
         // Increase count fights & reset Hitpoints
         characters.ForEach (c => {
           c.Fights++;
