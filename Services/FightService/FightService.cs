@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +25,14 @@ namespace Rpg_Restapi.Services {
           .FirstOrDefaultAsync (c => c.Id == request.AttackerId);
         if (attacker == null) {
           response.Success = false;
-          response.Message = $"Attacker with id '{request.AttackerId}' not found!";
+          response.Message = $"Attacker with id {request.AttackerId} not found!";
           return response;
         }
         Character opponent = await _context.Characters
           .FirstOrDefaultAsync (c => c.Id == request.OpponentId);
         if (opponent == null) {
           response.Success = false;
-          response.Message = $"Opponent with id '{request.OpponentId}' not found!";
+          response.Message = $"Opponent with id {request.OpponentId} not found!";
           return response;
         }
         int damage = _DoWeaponAttack (attacker, opponent);
@@ -57,7 +58,51 @@ namespace Rpg_Restapi.Services {
       return response;
     }
     public async Task<ServiceResponse<AttackResultDto>> SkillAttack (SkillAttackDto request) {
-      throw new System.NotImplementedException ();
+      ServiceResponse<AttackResultDto> response = new ServiceResponse<AttackResultDto> ();
+
+      try {
+        Character attacker = await _context.Characters
+          .Include (c => c.CharacterSkills).ThenInclude (cs => cs.Skill)
+          .FirstOrDefaultAsync (c => c.Id == request.AttackerId);
+        if (attacker == null) {
+          response.Success = false;
+          response.Message = $"Attacker with id {request.AttackerId} not found!";
+          return response;
+        }
+        Character opponent = await _context.Characters
+          .FirstOrDefaultAsync (c => c.Id == request.OpponentId);
+        if (opponent == null) {
+          response.Success = false;
+          response.Message = $"Opponent with id {request.OpponentId} not found!";
+          return response;
+        }
+        CharacterSkill characterSkill =
+          attacker.CharacterSkills.FirstOrDefault (cs => cs.Skill.Id == request.SkillId);
+        if (characterSkill == null) {
+          response.Success = false;
+          response.Message = $"{attacker.Name} doesn't know that skill.";
+          return response;
+        }
+
+        int damage = _DoSkillAttack (attacker, opponent, characterSkill);
+        if (opponent.HitPoints <= 0) {
+          response.Message = $"{opponent.Name} has been defeated";
+        }
+        _context.Characters.Update (opponent);
+        await _context.SaveChangesAsync ();
+        response.Data = new AttackResultDto {
+          Attacker = attacker.Name,
+          AttackerHP = attacker.HitPoints,
+          Opponent = opponent.Name,
+          OpponentHP = opponent.HitPoints,
+          Damage = damage
+        };
+      } catch (System.Exception ex) {
+
+        response.Success = false;
+        response.Message = ex.Message;
+      }
+      return response;
 
     }
 

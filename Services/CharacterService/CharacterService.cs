@@ -73,7 +73,7 @@ namespace Rpg_Restapi.Services {
       var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _GetUserId ());
       if (charFound == null) {
         serviceResponse.Success = false;
-        serviceResponse.Message = $"Character with id '{id}' not found!";
+        serviceResponse.Message = $"Character with id {id} not found!";
         return serviceResponse;
       }
       serviceResponse.Data = _mapper.Map<GetCharacterDto> (charFound);
@@ -86,7 +86,7 @@ namespace Rpg_Restapi.Services {
         var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == updatedCharacterDto.Id && c.UserId == _GetUserId ());
         if (charFound == null) {
           serviceResponse.Success = false;
-          serviceResponse.Message = $"Character with id '{updatedCharacterDto.Id}' not found!";
+          serviceResponse.Message = $"Character with id {updatedCharacterDto.Id} not found!";
           return serviceResponse;
         }
         var updateCharacter = _mapper.Map<Character> (updatedCharacterDto);
@@ -106,7 +106,7 @@ namespace Rpg_Restapi.Services {
         var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _GetUserId ());
         if (charFound == null) {
           serviceResponse.Success = false;
-          serviceResponse.Message = $"Character with id '{id}' not found!";
+          serviceResponse.Message = $"Character with id {id} not found!";
           return serviceResponse;
         }
         _context.Characters.Remove (charFound);

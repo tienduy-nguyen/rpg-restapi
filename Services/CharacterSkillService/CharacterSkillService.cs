@@ -31,13 +31,13 @@ namespace Rpg_Restapi.Services {
           .FirstOrDefaultAsync (c => c.Id == newCharacterSkillDto.CharacterId && c.UserId == _GetUserId ());
         if (character == null) {
           response.Success = false;
-          response.Message = $"Character with id '{newCharacterSkillDto.CharacterId}' not found!";
+          response.Message = $"Character with id {newCharacterSkillDto.CharacterId} not found!";
           return response;
         }
         Skill skill = await _context.Skills.FirstOrDefaultAsync (s => s.Id == newCharacterSkillDto.SkillId);
         if (skill == null) {
           response.Success = false;
-          response.Message = $"Skill with id '{newCharacterSkillDto.SkillId}' not found!";
+          response.Message = $"Skill with id {newCharacterSkillDto.SkillId} not found!";
           return response;
         }
 

@@ -28,7 +28,7 @@ namespace Rpg_Restapi.Services {
           .FirstOrDefaultAsync (c => c.Id == newWeaponDto.CharacterId && c.UserId == _getUserId ());
         if (character == null) {
           response.Success = false;
-          response.Message = $"Character with '{newWeaponDto.CharacterId}' not found!";
+          response.Message = $"Character with {newWeaponDto.CharacterId} not found!";
           return response;
         }
         Weapon weapon = _mapper.Map<Weapon> (newWeaponDto);
