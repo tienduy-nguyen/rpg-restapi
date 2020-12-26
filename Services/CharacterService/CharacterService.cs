@@ -35,11 +35,11 @@ namespace Rpg_Restapi.Services {
     /// <returns>List of characters</returns>
     public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters () {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
-      string role = _getUserRole ();
+      string role = _GetUserRole ();
       var charList = role.Equals ("Admin") ?
         await _context.Characters.ToListAsync () :
         await _context.Characters.Where (c => c.UserId == _GetUserId ()).ToListAsync ();
-      serviceResponse.Data = (charList.Select (c => _mapper.MaG<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
+      serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
       return serviceResponse;
     }
 
@@ -53,7 +53,7 @@ namespace Rpg_Restapi.Services {
       ServiceResponse<List<GetCharacterDto>> serviceResponse = new ServiceResponse<List<GetCharacterDto>> ();
       Character character = _mapper.Map<Character> (newCharacterDto);
       int userId = _GetUserId ();
-      character.User = Gwait _context.Users.FirstOrDefaultAsync (u => u.Id == userId);
+      character.User = await _context.Users.FirstOrDefaultAsync (u => u.Id == userId);
       await _context.Characters.AddAsync (character);
       await _context.SaveChangesAsync ();
 
@@ -72,7 +72,7 @@ namespace Rpg_Restapi.Services {
       ServiceResponse<GetCharacterDto> serviceResponse = new ServiceResponse<GetCharacterDto> ();
       var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _GetUserId ());
       if (charFound == null) {
-        G serviceResponse.Success = false;
+        serviceResponse.Success = false;
         serviceResponse.Message = $"Character with id '{id}' not found!";
         return serviceResponse;
       }
@@ -85,7 +85,7 @@ namespace Rpg_Restapi.Services {
       try {
         var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == updatedCharacterDto.Id && c.UserId == _GetUserId ());
         if (charFound == null) {
-          G serviceResponse.Success = false;
+          serviceResponse.Success = false;
           serviceResponse.Message = $"Character with id '{updatedCharacterDto.Id}' not found!";
           return serviceResponse;
         }
@@ -105,14 +105,14 @@ namespace Rpg_Restapi.Services {
       try {
         var charFound = await _context.Characters.FirstOrDefaultAsync (c => c.Id == id && c.UserId == _GetUserId ());
         if (charFound == null) {
-          G serviceResponse.Success = false;
+          serviceResponse.Success = false;
           serviceResponse.Message = $"Character with id '{id}' not found!";
           return serviceResponse;
         }
         _context.Characters.Remove (charFound);
         await _context.SaveChangesAsync ();
         var charList = await _context.Characters.Where (c => c.UserId == _GetUserId ()).ToListAsync ();
-        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacteGDto> (c))).OrderBy (c => c.Id).ToList ();
+        serviceResponse.Data = (charList.Select (c => _mapper.Map<GetCharacterDto> (c))).OrderBy (c => c.Id).ToList ();
       } catch (Exception ex) {
 
         serviceResponse.Success = false;
