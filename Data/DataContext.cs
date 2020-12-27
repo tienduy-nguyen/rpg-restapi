@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Rpg_Restapi.Data;
 using Rpg_Restapi.Models;
+using Rpg_Restapi.Utilities;
 
 namespace Rpg_Restapi.Data {
   public class DataContext : DbContext {
@@ -16,8 +17,10 @@ namespace Rpg_Restapi.Data {
       modelBuilder.Entity<CharacterSkill> ()
         .HasKey (cs => new { cs.CharacterId, cs.SkillId });
 
-      modelBuilder.Entity<User> ()
-        .Property (user => user.Role).HasDefaultValue ("Player");
+      modelBuilder.Entity<User> (entity => {
+        entity.HasIndex (u => u.Username).IsUnique ();
+        entity.Property (user => user.Role).HasDefaultValue ("Player");
+      });
 
       modelBuilder.Entity<Skill> ().HasData (
         new Skill { Id = 1, Name = "Fireball", Damage = 30 },
@@ -25,7 +28,7 @@ namespace Rpg_Restapi.Data {
         new Skill { Id = 3, Name = "Blizzard", Damage = 50 }
       );
 
-      Utilities.CreatePasswordHash ("1234567", out byte[] passwordHash, out byte[] passwordSalt);
+      Security.CreatePasswordHash ("1234567", out byte[] passwordHash, out byte[] passwordSalt);
 
       modelBuilder.Entity<User> ().HasData (
         new User { Id = 1, PasswordHash = passwordHash, PasswordSalt = passwordSalt, Username = "user1" },

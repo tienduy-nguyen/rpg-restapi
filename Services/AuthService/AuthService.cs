@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Rpg_Restapi.Data;
 using Rpg_Restapi.Models;
+using Rpg_Restapi.Utilities;
 
-namespace Rpg_Restapi.Data {
-  public class AuthRepository : IAuthRepository {
+namespace Rpg_Restapi.Services {
+  public class AuthService : IAuthService {
     private DataContext _context;
     private IConfiguration _configuration;
-    public AuthRepository (DataContext context, IConfiguration configuration) {
+    public AuthService (DataContext context, IConfiguration configuration) {
       _configuration = configuration;
       _context = context;
     }
@@ -32,7 +34,7 @@ namespace Rpg_Restapi.Data {
         response.Message = $"User with '{username}' not found";
         return response;
       }
-      if (!Utilities.VerifyPasswordHash (password, user.PasswordHash, user.PasswordSalt)) {
+      if (!Security.VerifyPasswordHash (password, user.PasswordHash, user.PasswordSalt)) {
         response.Success = false;
         response.Message = "Invalid credentials";
         return response;
@@ -55,7 +57,7 @@ namespace Rpg_Restapi.Data {
         response.Message = $"User with '{user.Username}' already exists";
         return response;
       }
-      Utilities.CreatePasswordHash (password, out byte[] passwordHash, out byte[] passwordSalt);
+      Security.CreatePasswordHash (password, out byte[] passwordHash, out byte[] passwordSalt);
       user.PasswordHash = passwordHash;
       user.PasswordSalt = passwordSalt;
       await _context.Users.AddAsync (user);
