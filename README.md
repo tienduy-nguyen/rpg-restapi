@@ -1,28 +1,162 @@
 # .NET Core REST Api for Role Playing Game(rpg)
 
-## Getting started 
+Demo: [https://net-rpg.herokuapp.com/](https://net-rpg.herokuapp.com/)
+## Installation
 
-Follow series of [tutorial .NET Core 3.1 Webapi of Patrick God](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla)
+If you wanna try run quickly this project from your local:
+- Clone this repo
+- Run `dotnet restore` to update packages dependencies
+- Set user-secrets for secret key database
+  ```s
+  dotnet user-secrets init
+  dotnet user-secrets set "AppSettings:Token" "< any secret key for jsonwebtoken>"
+  ```
+- Change name & password for connectionString of PostgreSQL in `appSettings.json`
+  ```json
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost; Port=5432; Database=net_todo; User ID=postgres; Password=postgres"
+  }
+  ```
+- Run database seeding
+  ```s
+  dotnet tool install -g dotnet-ef
+  dotnet ef database update
+  dotnet run
+  ```
+- Run `dotnet run`: to run server (check on port 5000)
 
-Each branch equivalent each chapter.
+Note: In this project, I use .Net version `3.1.3` and `5.0`. If you don't use these versions. You can use your own version by change version in `global.json` file and specify it in `.csproj` file: `<TargetFramework>netcoreapp3.1</TargetFramework>`.
+## Development
 
-Master branch is the latest version.
+- With this project, you can understand:
+  - How to build a web REST API with .net core 3 or  5
+  - How to have a good structure project for web api
+  - Use SQL Database & Entity Framework
+  - Secure app & authenticate with JsonWebToken
+  - OOP Solution 
+  - Map & convert quickly between different classes
+  - How to create document API with Swagger/Open API
+  - Use Dependency Injection solution
+  - How to access User from `HttpContextAccessor`
+  - How to use asynchronously development solution for your project
+  - Use Generic type
+  
 
-### Series
+### Technologies
+- Dotnet web api
+- Authentication user: Using `System.Security.Cryptography` algorithms to create password `hash` & `salt` to save in database.
+- Database: using `PostgreSQL` & Microsoft Entity Framework
+- Authentication HTTP request with Json Web Token
+- AutoMapper data between `data models` &  `data transfer object`
+- Documentation: Using `Swashbuckle` of swagger to generate auto document api for view controller.
 
-1. [.NET Core 3.1 Web API & Entity Framework Jumpstart - Part 1](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla)
-2. [Attribute Routing, HTTP Request Methods & Best Practices in .NET Core Web API](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-2-58gp)
-3. [Asynchronous Calls, Data-Transfer-Objects & Automapper in .NET Core Web API](https://dev.to/_patrickgod/asynchronous-calls-data-transfer-objects-automapper-in-net-core-web-api-228b)
-4. [Update & Remove Entities in .NET Core 3.1 Web API with PUT & DELETE](https://dev.to/_patrickgod/update-remove-entities-in-net-core-3-1-web-api-with-put-delete-3o2k)
-5. [Object-Relational Mapping & Code First Migration with Entity Framework Core](https://dev.to/_patrickgod/object-relational-mapping-code-first-migration-with-entity-framework-core-nno)
-6. [All CRUD Operations with Entity Framework Core (GET, POST, PUT & DELETE)](https://dev.to/_patrickgod/all-crud-operations-with-entity-framework-core-get-post-put-delete-44li)
-7. [Basic Authentication with a .NET Core Web API](https://dev.to/_patrickgod/basic-authentication-with-a-net-core-web-api-2a59)
-8. [Authentication with JSON Web Tokens in .NET Core 3.1](https://dev.to/_patrickgod/authentication-with-json-web-tokens-in-net-core-3-1-29bd)
-9. [Advanced Relationships with Entity Framework Core](https://dev.to/_patrickgod/advanced-relationships-with-entity-framework-core-43am)
-10. [One-to-One Relationship with Entity Framework Core](https://dev.to/_patrickgod/one-to-one-relationship-with-entity-framework-core-3pgg)
-11. [Many-To-Many Relationship with Entity Framework Core](https://dev.to/_patrickgod/many-to-many-relationship-with-entity-framework-core-4059)
-12. [More Than Just CRUD with .NET Core 3.1](https://dev.to/_patrickgod/more-than-just-crud-with-net-core-3-1-370k)
-13. [More Than Just CRUD with .NET Core 3.1 - Part 2](https://dev.to/_patrickgod/more-than-just-crud-with-net-core-3-1-part-2-32na)
-14. [Role-Based Authentication in .NET Core 3.1](https://dev.to/_patrickgod/role-based-authentication-in-net-core-3-1-190g)
-15. [SQLite & Data Seeding with Entity Framework Core](https://dev.to/_patrickgod/sqlite-data-seeding-with-entity-framework-core-4dna)
+### Structure folder
+
+- **Controllers**: contains all view controllers of project (routes, http request)
+- **Data**: contains DataContext of Entity Framework Database
+- **Dto**: Data Transfer Objects - Classes used as a container to encapsulate data and pass it from one layer of the application to another. We usually use them for working with http request.
+- **Migrations**: Folders generate auto by [ef tool](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) to create migrations with sql database (like PostgreSQL, MySQL, SQL Server ...)
+- **Models**: Class models contain fields of database tables
+- **Services**: All services of project. Each service is equivalent the controller. It contains all methods using for controller.
+- **Utilities**: Helper methods
+- All other files: Generate auto with `dotnet new` tool.
+  
+
+### Branches
+I follow the principle development given by [Patrick God](https://dev.to/_patrickgod) and I try my own to code solution project.
+
+  Thanks so much of his contribution. The series of this development are posted on [dev.to](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla). 
+
+The project is developed step by step from basics to advance.
+
+Each branch is equivalent to each step. The master branch is the last solution of project. The template project is generated by `dotnet new webapi -o <...>`
+
+Step by step: basic to advance --> branch by branch:
+
+- s1: Basic setup & Init  project with Entity Framework
+- s2: Routing & Http request
+- s3: Using asynchronous call
+- s4: Using Data transfer object (DTO)
+- s5: Object relation mapping & Migration with SQL database
+- s6: CRUD with Entity Framework
+- s7: Basic authentication
+- s8: Authentication with JsonWebToken
+- s9: Init relationship between models
+- s10: One to one relationship
+- s11: One to many relationship
+- s12: Create Fight Classes for game
+- s14: User role
+- s15: Create seeding for Init database
+- s16: More: Skill routing
+- s17: More: User routing
+- s18: Deploy to heroku
+- Master branch: Latest solution
+- Upgrade-net50 branch: Using .Net 5.0
+  
+Todo:
+- [ ] Testing
+
+## Deploy production on Heroku
+[Heroku](https://www.heroku.com/home) is free for 5 app forever. Azure cloud is free only for first year. I decided use heroku for deploy API server of this project.
+
+Because Heroku isn't able to run C# code directly, but they do have supprot for Docker container. So we will create Docker container and push it to Heroku container.
+
+- Make sure you have an heroku account, [heroku cli](https://devcenter.heroku.com/articles/heroku-cli) & docker installed on your local
+- Login heroku account from browser
+- Login heroku account with heroku cli
+  ```s
+  $ heroku login
+  $ heroku container:login
+  # Press any key & click button login when a web page of heroku opened
+  ```
+- Create a app from your heroku account
+  For example: I created a app called `net-rpg`
+  
+  We will use this app later to deploy with Docker container
+- Create `Dockerfile` & paste the following code:
+  ```yml
+  # Dockerfile
+  FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+  WORKDIR /app
+
+  # Copy csproj and restore as distinct layers
+  COPY *.csproj ./
+  RUN dotnet restore
+
+
+  # Copy everything else and build
+  COPY . .
+  RUN dotnet publish -c Release -o out
+
+  # Build runtime image
+  FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+  WORKDIR /app
+  COPY --from=build-env /app/out .
+
+  # Run the app on container startup
+  # Use your project name for the second parameter
+  # e.g. MyProject.dll
+  # ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
+  CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
+  ```
+- Create `.dockerignore` to ignore debug & test file
+  ```
+  # .dockerignore file
+  bin/
+  obj/
+  ```
+- Push your app to heroku container
+  
+  As I created a app called `net-rpg`, I will use it now:
+  ```s
+  $ heroku container:push -a net-rpg web
+  ```
+- Release deploy
+  ```s
+  $ heroku container:release -a net-rpg web
+  ```
+- Check link app from heroku
+## Reference
+
+Best thank Patrick God for awesome series [Web API Entity Framework .Net core](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla)
 

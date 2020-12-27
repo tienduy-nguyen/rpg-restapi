@@ -1,5 +1,5 @@
-namespace Rpg_Restapi.Data {
-  public class Utilities {
+namespace Rpg_Restapi.Utilities {
+  public class Security {
 
     /// <summary>
     /// Create a hash password from Hmac of System.SecurityCryptography
