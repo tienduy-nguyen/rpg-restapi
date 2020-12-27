@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Rpg_Restapi.Dtos;
 using Rpg_Restapi.Models;
 
-namespace Rpg_Restapi.Services.UserService {
+namespace Rpg_Restapi.Services {
   public interface IUserService {
 
     Task<ServiceResponse<List<GetUserDto>>> GetAllUsers ();

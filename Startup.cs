@@ -43,6 +43,7 @@ namespace Rpg_Restapi {
       /* Denpendency Injection for service */
       services.AddScoped<ICharacterService, CharacterService> ();
       services.AddScoped<IAuthService, AuthService> ();
+      services.AddScoped<IUserService, UserService> ();
       services.AddScoped<ISkillService, SkillService> ();
       services.AddScoped<IWeaponService, WeaponService> ();
       services.AddScoped<ICharacterSkillService, CharacterSkillService> ();
