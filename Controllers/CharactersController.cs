@@ -36,10 +36,10 @@ namespace Rpg_Restapi.Controllers {
 
     [HttpPut ("{id}")]
     public async Task<IActionResult> UpdateCharacter (int id, UpdateCharacterDto updateCharacterDto) {
-      ServiceResponse<GetCharacterDto> response = await _characterService.UpdateCharacter (id, updateCharacterDto);
       if (id != updateCharacterDto.Id) {
-        return BadRequest (response);
+        return BadRequest ();
       }
+      ServiceResponse<GetCharacterDto> response = await _characterService.UpdateCharacter (id, updateCharacterDto);
       if (response.Data == null) {
         return NotFound (response);
       }

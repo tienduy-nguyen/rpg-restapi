@@ -45,8 +45,11 @@ namespace Rpg_Restapi.Controllers {
     [Authorize (Roles = "Admin")]
     [HttpPut ("{id}")]
     public async Task<IActionResult> UpdateCharacter (int id, UpdateSkillDto updateSkillDto) {
+      if (id != updateSkillDto.Id) {
+        return BadRequest ();
+      }
       ServiceResponse<GetSkillDto> response = await _skillService.UpdateSkill (id, updateSkillDto);
-      if (id != updateSkillDto.Id || !response.Success) {
+      if (!response.Success) {
         return BadRequest (response);
       }
       if (response.Data == null) {

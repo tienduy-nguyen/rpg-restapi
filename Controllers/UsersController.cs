@@ -48,11 +48,15 @@ namespace Rpg_Restapi.Controllers {
         return BadRequest (response);
       }
       return Ok (response);
-
     }
 
+    /// <summary>
+    /// Private User route: Get user by username
+    /// </summary>
+    /// <param name="username"></param>
+    /// <returns></returns>
     [HttpGet ("{username}")]
-    public async Task<ActionResult<Character>> GetUserById (string username) {
+    public async Task<ActionResult<Character>> GetUserByUsername (string username) {
       ServiceResponse<GetUserDto> response = await _userService.GetUserByUsername (username);
       if (!response.Success) {
         return BadRequest (response);
@@ -61,12 +65,18 @@ namespace Rpg_Restapi.Controllers {
 
     }
 
+    /// <summary>
+    /// Private User route: Update user
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="updateUser"></param>
+    /// <returns></returns>
     [HttpPut ("{id}")]
     public async Task<IActionResult> UpdateCharacter (int id, UpdateUserDto updateUser) {
-      ServiceResponse<GetUserDto> response = await _userService.UpdateUser (id, updateUser);
       if (id != updateUser.Id) {
-        return BadRequest (response);
+        return Unauthorized ();
       }
+      ServiceResponse<GetUserDto> response = await _userService.UpdateUser (id, updateUser);
       if (response.Data == null) {
         return NotFound (response);
       }
