@@ -113,5 +113,24 @@ namespace Rpg_Restapi.Controllers {
       }
     }
 
+    /// <summary>
+    /// Private Admin route: Update user role (Admin, Player)
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="updateRoleDto"></param>
+    /// <returns></returns>
+    [Authorize (Roles = "Admin")]
+    [HttpPost ("{id}/roles")]
+    public async Task<IActionResult> UpdateUserRole (int id, UpdateRoleDto updateRoleDto) {
+      if (id != updateRoleDto.Id) {
+        return Unauthorized ();
+      }
+      ServiceResponse<GetUserDto> response = await _userService.UpdateUserRole (id, updateRoleDto);
+      if (response.Data == null) {
+        return NotFound (response);
+      }
+      return Ok (response);
+    }
+
   }
 }
