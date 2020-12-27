@@ -4,6 +4,23 @@
 If you wanna try run quickly this project from your local:
 - Clone this repo
 - Run `dotnet restore` to update packages dependencies
+- Set user-secrets for secret key database
+  ```s
+  dotnet user-secrets init
+  dotnet user-secrets set "AppSettings:Token" "< any secret key for jsonwebtoken>"
+  ```
+- Change name & password for connectionString of PostgreSQL in `appSettings.json`
+  ```json
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost; Port=5432; Database=net_todo; User ID=postgres; Password=postgres"
+  }
+  ```
+- Run database seeding
+  ```s
+  dotnet tool install -g dotnet-ef
+  dotnet ef database update
+  dotnet run
+  ```
 - Run `dotnet run`: to run server (check on port 5000)
 
 Note: In this project, I use .Net version `3.1.3` and `5.0`. If you don't use these versions. You can use your own version by change version in `global.json` file and specify it in `.csproj` file: `<TargetFramework>netcoreapp3.1</TargetFramework>`.
