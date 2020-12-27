@@ -12,16 +12,11 @@ namespace Rpg_Restapi.Services {
   public class UserService : IUserService {
     private readonly IMapper _mapper;
     private readonly DataContext _context;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService (DataContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public UserService (DataContext context, IMapper mapper) {
       _context = context;
       _mapper = mapper;
-      _httpContextAccessor = httpContextAccessor;
     }
-
-    private int _GetUserId () => int.Parse (_httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
-    private string _GetUserRole () => _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.Role);
 
     public async Task<ServiceResponse<List<GetUserDto>>> GetAllUsers () {
       ServiceResponse<List<GetUserDto>> response = new ServiceResponse<List<GetUserDto>> ();
@@ -122,12 +117,6 @@ namespace Rpg_Restapi.Services {
     public async Task<ServiceResponse<GetUserDto>> DeleteAccount (int id) {
       ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto> ();
       try {
-        int userId = _GetUserId ();
-        if (userId != id) {
-          response.Success = false;
-          response.Message = "Unauthorize";
-          return response;
-        }
         User user = await _context.Users.FirstOrDefaultAsync (u => u.Id == id);
         if (user == null) {
           response.Success = false;

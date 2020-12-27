@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +16,14 @@ namespace Rpg_Restapi.Controllers {
   [Route ("api/[controller]")]
   [ApiController]
   public class UserController : ControllerBase {
-    public UserController (IUserService userService) {
+    public UserController (IUserService userService, IHttpContextAccessor httpContextAccessor) {
       _userService = userService;
+      _httpContextAccessor = httpContextAccessor;
     }
     private readonly IUserService _userService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private int _GetUserId () => int.Parse (_httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
+    private string _GetUserRole () => _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.Role);
 
     [Authorize (Roles = "Admin")]
     [HttpGet]
@@ -61,14 +67,29 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
-    [Authorize (Roles = "Admin")]
     [HttpDelete ("{id:int}")]
     public async Task<IActionResult> DeleteUser (int id) {
-      ServiceResponse<List<GetUserDto>> response = await _userService.DeleteUser (id);
-      if (response.Data == null) {
-        return NotFound (response);
+      int currentUserId = _GetUserId ();
+      string currentUserRole = _GetUserRole ();
+      // Check if user is admin
+      if (currentUserRole == "Admin") {
+        var response = await _userService.DeleteUser (id);
+        if (response.Data == null) {
+          return NotFound (response);
+        }
+        return Ok (response);
       }
-      return Ok (response);
+
+      // Check if user want to delete his account
+      if (currentUserId == id) {
+        var response = await _userService.DeleteAccount (id);
+        if (response.Data == null) {
+          return NotFound (response);
+        }
+        return Ok (response);
+      } else {
+        return Unauthorized (); // Cannot delete user if id given is not current user
+      }
     }
 
   }
