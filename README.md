@@ -1,4 +1,6 @@
 # .NET Core REST Api for Role Playing Game(rpg)
+
+Demo: [https://net-rpg.herokuapp.com/](https://net-rpg.herokuapp.com/)
 ## Installation
 
 If you wanna try run quickly this project from your local:
@@ -90,6 +92,67 @@ Step by step: basic to advance --> branch by branch:
 - s18: Deploy to heroku
 - Master branch: Last solution
 - Upgrade-net50 branch: Using .Net 5.0
+
+## Deploy production on Heroku
+[Heroku](https://www.heroku.com/home) is free for 5 app forever. Azure cloud is free only for first year. I decided use heroku for deploy API server of this project.
+
+Because Heroku isn't able to run C# code directly, but they do have supprot for Docker container. So we will create Docker container and push it to Heroku container.
+
+- Make sure you have an heroku account, [heroku cli](https://devcenter.heroku.com/articles/heroku-cli) & docker installed on your local
+- Login heroku account from browser
+- Login heroku account with heroku cli
+  ```s
+  $ heroku login
+  $ heroku container:login
+  # Press any key & click button login when a web page of heroku opened
+  ```
+- Create a app from your heroku account
+  For example: I created a app called `net-rpg`
+  
+  We will use this app later to deploy with Docker container
+- Create `Dockerfile` & paste the following code:
+  ```yml
+  # Dockerfile
+  FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+  WORKDIR /app
+
+  # Copy csproj and restore as distinct layers
+  COPY *.csproj ./
+  RUN dotnet restore
+
+
+  # Copy everything else and build
+  COPY . .
+  RUN dotnet publish -c Release -o out
+
+  # Build runtime image
+  FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+  WORKDIR /app
+  COPY --from=build-env /app/out .
+
+  # Run the app on container startup
+  # Use your project name for the second parameter
+  # e.g. MyProject.dll
+  # ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
+  CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
+  ```
+- Create `.dockerignore` to ignore debug & test file
+  ```
+  # .dockerignore file
+  bin/
+  obj/
+  ```
+- Push your app to heroku container
+  
+  As I created a app called `net-rpg`, I will use it now:
+  ```s
+  $ heroku container:push -a net-rpg web
+  ```
+- Release deploy
+  ```s
+  $ heroku container:release -a net-rpg web
+  ```
+- Check link app from heroku
 ## Reference
 
 Best thank Patrick God for awesome series [Web API Entity Framework .Net core](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla)
