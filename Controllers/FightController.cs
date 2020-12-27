@@ -15,6 +15,11 @@ namespace Rpg_Restapi.Controllers {
       _fightService = fightService;
     }
 
+    /// <summary>
+    /// Private User route: Attack an opponent by weapon
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost ("Weapon")]
     public async Task<IActionResult> WeaponAttack (WeaponAttackDto request) {
       ServiceResponse<AttackResultDto> response = await _fightService.WeaponAttack (request);
@@ -25,6 +30,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private User route: Attack an opponent by skill
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost ("Skill")]
     public async Task<IActionResult> SkillAttack (SkillAttackDto request) {
       ServiceResponse<AttackResultDto> response = await _fightService.SkillAttack (request);
@@ -35,6 +45,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private User route: Fight between characters
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> Fight (FightRequestDto request) {
       ServiceResponse<FightResultDto> response = await _fightService.Fight (request);
@@ -44,8 +59,12 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Public route: Get highscore of players
+    /// </summary>
+    /// <returns></returns>
     [AllowAnonymous]
-    [HttpGet]
+    [HttpGet ("highscore")]
     public async Task<IActionResult> GetHighscore () {
       return Ok (await _fightService.GetHighscore ());
     }

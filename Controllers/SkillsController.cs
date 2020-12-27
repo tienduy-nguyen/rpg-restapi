@@ -15,13 +15,23 @@ namespace Rpg_Restapi.Controllers {
     public SkillsController (ISkillService skillService) {
       _skillService = skillService;
     }
-
+    /// <summary>
+    /// Public route: Get all skills exist
+    /// </summary>
+    /// <returns></returns>
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllSkill () {
       ServiceResponse<List<GetSkillDto>> response = await _skillService.GetAllSkills ();
       return Ok (response);
     }
 
+    /// <summary>
+    /// Public route: Get detail skill by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [AllowAnonymous]
     [HttpGet ("{id}")]
     public async Task<IActionResult> GetSkillById (int id) {
       ServiceResponse<GetSkillDto> response = await _skillService.GetSkillById (id);
@@ -31,6 +41,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private Admin route: Create new skill
+    /// </summary>
+    /// <param name="newSkillDto"></param>
+    /// <returns></returns>
     [Authorize (Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> AddSkill (AddSkillDto newSkillDto) {
@@ -41,11 +56,20 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private Admin route: Update skill
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="updateSkillDto"></param>
+    /// <returns></returns>
     [Authorize (Roles = "Admin")]
     [HttpPut ("{id}")]
-    public async Task<IActionResult> UpdateCharacter (int id, UpdateSkillDto updateSkillDto) {
+    public async Task<IActionResult> UpdateSkill (int id, UpdateSkillDto updateSkillDto) {
+      if (id != updateSkillDto.Id) {
+        return BadRequest ();
+      }
       ServiceResponse<GetSkillDto> response = await _skillService.UpdateSkill (id, updateSkillDto);
-      if (id != updateSkillDto.Id || !response.Success) {
+      if (!response.Success) {
         return BadRequest (response);
       }
       if (response.Data == null) {
@@ -54,6 +78,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private Admin route: Delete a skill by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize (Roles = "Admin")]
     [HttpDelete ("{id}")]
     public async Task<IActionResult> DeleteSkill (int id) {

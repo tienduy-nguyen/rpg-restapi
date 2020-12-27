@@ -153,5 +153,26 @@ namespace Rpg_Restapi.Services {
       return response;
     }
 
+    public async Task<ServiceResponse<GetUserDto>> UpdateUserRole (int id, UpdateRoleDto updateRoleDto) {
+      ServiceResponse<GetUserDto> response = new ServiceResponse<GetUserDto> ();
+      try {
+        User user = await _context.Users.FirstOrDefaultAsync (u => u.Id == id);
+        if (user == null) {
+          response.Success = false;
+          response.Message = $"User with id {id} not found!";
+          return response;
+        }
+        var updateUser = _mapper.Map<User> (updateRoleDto);
+        _context.Entry (updateUser).State = EntityState.Modified;
+        await _context.SaveChangesAsync ();
+        response.Data = _mapper.Map<GetUserDto> (updateUser);
+        return response;
+
+      } catch (System.Exception ex) {
+        response.Success = false;
+        response.Message = ex.Message;
+      }
+      return response;
+    }
   }
 }

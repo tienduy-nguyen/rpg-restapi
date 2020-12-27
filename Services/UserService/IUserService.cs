@@ -11,6 +11,7 @@ namespace Rpg_Restapi.Services {
     Task<ServiceResponse<GetUserDto>> GetUserByUsername (string username);
     Task<ServiceResponse<GetUserDto>> UpdateUser (int id, UpdateUserDto updateUserDto);
     Task<ServiceResponse<GetUserDto>> UpdateUser (string username, UpdateUserDto updateUserDto);
+    Task<ServiceResponse<GetUserDto>> UpdateUserRole (int id, UpdateRoleDto updateRoleDto);
     Task<ServiceResponse<GetUserDto>> DeleteAccount (int id);
     Task<ServiceResponse<List<GetUserDto>>> DeleteUser (int id);
 

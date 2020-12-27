@@ -7,7 +7,7 @@ using Rpg_Restapi.Models;
 using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi.Controllers {
-  [Authorize]
+  [Authorize (Roles = "Admin")]
   [Route ("api/[controller]")]
   [ApiController]
   public class WeaponsController : ControllerBase {
@@ -15,7 +15,11 @@ namespace Rpg_Restapi.Controllers {
     public WeaponsController (IWeaponService weaponService) {
       _weaponService = weaponService;
     }
-
+    /// <summary>
+    /// Private Admin route: Create new weapon
+    /// </summary>
+    /// <param name="newWeaponDto"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddWeapon (AddWeaponDto newWeaponDto) {
       ServiceResponse<GetCharacterDto> response = await _weaponService.AddWeapon (newWeaponDto);
@@ -25,6 +29,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Public route: Get all weapons types
+    /// </summary>
+    /// <returns></returns>
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllWeapons () {
       return Ok (await _weaponService.GetAllWeapons ());

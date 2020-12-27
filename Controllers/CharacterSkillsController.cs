@@ -15,6 +15,11 @@ namespace Rpg_Restapi.Controllers {
       _characterSkillService = weaponService;
     }
 
+    /// <summary>
+    /// Private User route: Create new character-skill
+    /// </summary>
+    /// <param name="newCharacterSkillDto"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> AddCharacterSkill (AddCharacterSkillDto newCharacterSkillDto) {
       ServiceResponse<GetCharacterDto> response = await _characterSkillService.AddCharacterSkill (newCharacterSkillDto);
