@@ -16,6 +16,7 @@ namespace Rpg_Restapi.Controllers {
       _skillService = skillService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllSkill () {
       ServiceResponse<List<GetSkillDto>> response = await _skillService.GetAllSkills ();

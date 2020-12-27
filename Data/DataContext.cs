@@ -18,7 +18,7 @@ namespace Rpg_Restapi.Data {
         .HasKey (cs => new { cs.CharacterId, cs.SkillId });
 
       modelBuilder.Entity<User> (entity => {
-        entity.HasIndex (u => u.Username).IsUnique ();
+        entity.HasIndex (u => u.Id).IsUnique ();
         entity.Property (user => user.Role).HasDefaultValue ("Player");
       });
 

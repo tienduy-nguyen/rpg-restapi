@@ -12,8 +12,8 @@ namespace Rpg_Restapi.Controllers {
   [Authorize]
   [Route ("api/[controller]")]
   [ApiController]
-  public class UserController : ControllerBase {
-    public UserController (IUserService userService, IHttpContextAccessor httpContextAccessor) {
+  public class UsersController : ControllerBase {
+    public UsersController (IUserService userService, IHttpContextAccessor httpContextAccessor) {
       _userService = userService;
       _httpContextAccessor = httpContextAccessor;
     }
@@ -22,6 +22,10 @@ namespace Rpg_Restapi.Controllers {
     private int _GetUserId () => int.Parse (_httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.NameIdentifier));
     private string _GetUserRole () => _httpContextAccessor.HttpContext.User.FindFirstValue (ClaimTypes.Role);
 
+    /// <summary>
+    /// Private Admin route: Get all users
+    /// </summary>
+    /// <returns>User list</returns>
     [Authorize (Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Character>>> GetAll () {
@@ -32,6 +36,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private User route: Get User by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>User object</returns>
     [HttpGet ("{id:int}")]
     public async Task<ActionResult<Character>> GetUserById (int id) {
       ServiceResponse<GetUserDto> response = await _userService.GetUserById (id);
@@ -42,7 +51,7 @@ namespace Rpg_Restapi.Controllers {
 
     }
 
-    [HttpGet ("{username:string}")]
+    [HttpGet ("{username}")]
     public async Task<ActionResult<Character>> GetUserById (string username) {
       ServiceResponse<GetUserDto> response = await _userService.GetUserByUsername (username);
       if (!response.Success) {
