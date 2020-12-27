@@ -17,8 +17,10 @@ namespace Rpg_Restapi.Data {
       modelBuilder.Entity<CharacterSkill> ()
         .HasKey (cs => new { cs.CharacterId, cs.SkillId });
 
-      modelBuilder.Entity<User> ()
-        .Property (user => user.Role).HasDefaultValue ("Player");
+      modelBuilder.Entity<User> (entity => {
+        entity.HasIndex (u => u.Username).IsUnique ();
+        entity.Property (user => user.Role).HasDefaultValue ("Player");
+      });
 
       modelBuilder.Entity<Skill> ().HasData (
         new Skill { Id = 1, Name = "Fireball", Damage = 30 },
