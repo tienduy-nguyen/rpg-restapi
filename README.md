@@ -92,5 +92,5 @@ Step by step: basic to advance --> branch by branch:
 - Upgrade-net50 branch: Using .Net 5.0
 ## Reference
 
-Best thank Patrick God for series [Web API Entity Framework .Net core](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla)
+Best thank Patrick God for awesome series [Web API Entity Framework .Net core](https://dev.to/_patrickgod/net-core-3-1-web-api-entity-framework-jumpstart-part-1-4jla)
 
