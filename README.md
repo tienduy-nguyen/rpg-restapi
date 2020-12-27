@@ -1,6 +1,18 @@
 # .NET Core REST Api for Role Playing Game(rpg)
 
-Demo: [https://net-rpg.herokuapp.com/](https://net-rpg.herokuapp.com/)
+**Demo at:** [https://net-rpg.herokuapp.com/](https://net-rpg.herokuapp.com/)
+
+---
+
+
+- [.NET Core REST Api for Role Playing Game(rpg)](#net-core-rest-api-for-role-playing-gamerpg)
+  - [Installation](#installation)
+  - [Development](#development)
+    - [Technologies](#technologies)
+    - [Structure folder](#structure-folder)
+    - [Branches](#branches)
+  - [Deploy production on Heroku](#deploy-production-on-heroku)
+  - [Reference](#reference)
 ## Installation
 
 If you wanna try run quickly this project from your local:
