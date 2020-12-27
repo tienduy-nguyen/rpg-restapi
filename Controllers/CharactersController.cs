@@ -19,21 +19,43 @@ namespace Rpg_Restapi.Controllers {
     }
     private readonly ICharacterService _characterService;
 
+    /// <summary>
+    /// Private User route: Get all characters of current user
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Character>>> GetAll () {
       return Ok (await _characterService.GetAllCharacters ());
     }
 
+    /// <summary>
+    /// Private User route: Get Character by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>
+    /// Character DTO
+    /// </returns>
     [HttpGet ("{id}")]
     public async Task<ActionResult<Character>> GetCharacterById (int id) {
       return Ok (await _characterService.GetCharacterById (id));
     }
 
+    /// <summary>
+    /// Private User route: Create new character for current user
+    /// </summary>
+    /// <param name="newCharacterDto"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<Character>> CreateCharacter (AddCharacterDto newCharacterDto) {
       return Ok (await _characterService.AddCharacter (newCharacterDto));
     }
 
+    /// <summary>
+    /// Private User route: Update a character by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="updateCharacterDto"></param>
+    /// <returns></returns>
     [HttpPut ("{id}")]
     public async Task<IActionResult> UpdateCharacter (int id, UpdateCharacterDto updateCharacterDto) {
       if (id != updateCharacterDto.Id) {
@@ -46,6 +68,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private User route: Delete a character by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete ("{id}")]
     public async Task<IActionResult> DeleteCharacter (int id) {
       ServiceResponse<List<GetCharacterDto>> response = await _characterService.DeleteCharacter (id);

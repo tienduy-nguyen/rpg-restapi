@@ -83,6 +83,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Private User route: Delete account
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete ("{id:int}")]
     public async Task<IActionResult> DeleteUser (int id) {
       int currentUserId = _GetUserId ();

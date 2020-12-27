@@ -14,6 +14,11 @@ namespace Rpg_Restapi.Controllers {
       _authService = authService;
     }
 
+    /// <summary>
+    /// Public route: Login user
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost ("Login")]
     public async Task<IActionResult> Login (UserLoginDto request) {
       ServiceResponse<string> response = await _authService.Login (request.Username, request.Password);
@@ -23,6 +28,11 @@ namespace Rpg_Restapi.Controllers {
       return Ok (response);
     }
 
+    /// <summary>
+    /// Public route: Register new user
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost ("register")]
     public async Task<IActionResult> Register (UserRegisterDto request) {
       ServiceResponse<string> response = await _authService.Register (
