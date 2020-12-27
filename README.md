@@ -90,8 +90,11 @@ Step by step: basic to advance --> branch by branch:
 - s16: More: Skill routing
 - s17: More: User routing
 - s18: Deploy to heroku
-- Master branch: Last solution
+- Master branch: Latest solution
 - Upgrade-net50 branch: Using .Net 5.0
+  
+Todo:
+- [ ] Testing
 
 ## Deploy production on Heroku
 [Heroku](https://www.heroku.com/home) is free for 5 app forever. Azure cloud is free only for first year. I decided use heroku for deploy API server of this project.
