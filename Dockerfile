@@ -4,8 +4,8 @@ WORKDIR /app
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
 RUN dotnet restore
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="${PATH}:/root/.dotnet/tools"
+# RUN dotnet tool install --global dotnet-ef
+# ENV PATH="${PATH}:/root/.dotnet/tools"
 # RUN dotnet ef database update
 
 
@@ -24,5 +24,5 @@ COPY --from=build-env /app/out .
 # Use your project name for the second parameter
 # e.g. MyProject.dll
 # ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet ef database update
+# CMD ASPNETCORE_URLS=http://*:$PORT dotnet ef database update
 CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
