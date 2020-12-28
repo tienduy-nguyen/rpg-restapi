@@ -18,5 +18,6 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Run the app on container startup
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
+# CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
+ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
 

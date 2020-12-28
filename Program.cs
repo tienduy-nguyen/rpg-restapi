@@ -16,29 +16,20 @@ namespace Rpg_Restapi {
 
       var host = CreateHostBuilder (args).Build ();
 
+      // Run migration at run time
       using (var scope = host.Services.CreateScope ()) {
         var db = scope.ServiceProvider.GetRequiredService<DataContext> ();
         db.Database.Migrate ();
       }
       host.Run ();
-
-      // CreateHostBuilder (args)
-      //   .Build ()
-      //   .Run ();
     }
 
     public static IHostBuilder CreateHostBuilder (string[] args) {
       return Host.CreateDefaultBuilder (args)
         .ConfigureWebHostDefaults ((webBuilder) => {
-          webBuilder.UseUrls ($"http://+:{HostPort}");
-          webBuilder.UseKestrel ();
+          webBuilder.UseUrls ($"http://*:{HostPort}");
           webBuilder.UseStartup<Startup> ();
         });
-      // return Host.CreateDefaultBuilder (args)
-      //   .ConfigureWebHostDefaults (webBuilder => {
-      //     webBuilder.UseStartup<Startup> ();
-      //   });
-
     }
 
     private static bool IsDevelopment =>
