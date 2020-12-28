@@ -28,13 +28,26 @@ namespace Rpg_Restapi {
     }
 
     public static IHostBuilder CreateHostBuilder (string[] args) {
-      // var port = Environment.GetEnvironmentVariable ("PORT");
       return Host.CreateDefaultBuilder (args)
-        .ConfigureWebHostDefaults (webBuilder => {
+        .ConfigureWebHostDefaults ((webBuilder) => {
+          webBuilder.UseUrls ($"http://+:{HostPort}");
+          webBuilder.UseKestrel ();
           webBuilder.UseStartup<Startup> ();
         });
+      // return Host.CreateDefaultBuilder (args)
+      //   .ConfigureWebHostDefaults (webBuilder => {
+      //     webBuilder.UseStartup<Startup> ();
+      //   });
 
     }
+
+    private static bool IsDevelopment =>
+      Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Development";
+
+    public static string HostPort =>
+      IsDevelopment ?
+      "5000" :
+      Environment.GetEnvironmentVariable ("PORT");
 
   }
 }
