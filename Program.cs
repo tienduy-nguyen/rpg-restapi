@@ -15,6 +15,7 @@ namespace Rpg_Restapi {
     public static void Main (string[] args) {
 
       var host = CreateHostBuilder (args).Build ();
+
       using (var scope = host.Services.CreateScope ()) {
         var db = scope.ServiceProvider.GetRequiredService<DataContext> ();
         db.Database.Migrate ();
@@ -26,11 +27,14 @@ namespace Rpg_Restapi {
       //   .Run ();
     }
 
-    public static IHostBuilder CreateHostBuilder (string[] args) =>
-      Host.CreateDefaultBuilder (args)
-      .ConfigureWebHostDefaults (webBuilder => {
-        webBuilder.UseStartup<Startup> ();
-      });
+    public static IHostBuilder CreateHostBuilder (string[] args) {
+      // var port = Environment.GetEnvironmentVariable ("PORT");
+      return Host.CreateDefaultBuilder (args)
+        .ConfigureWebHostDefaults (webBuilder => {
+          webBuilder.UseStartup<Startup> ();
+        });
+
+    }
 
   }
 }
