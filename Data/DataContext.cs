@@ -27,8 +27,8 @@ namespace Rpg_Restapi.Data {
       );
 
       modelBuilder.Entity<Weapon> ().HasData (
-        new Weapon { Id = Guid.NewGuid (), Name = "The Master Sword", Damage = 20 },
-        new Weapon { Id = Guid.NewGuid (), Name = "Crystal Wand", Damage = 5 }
+        new Weapon { Uuid = Guid.NewGuid (), Name = "The Master Sword", Damage = 20 },
+        new Weapon { Uuid = Guid.NewGuid (), Name = "Crystal Wand", Damage = 5 }
       );
 
       modelBuilder.Entity<CharacterSkill> ()

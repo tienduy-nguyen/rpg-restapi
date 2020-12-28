@@ -35,7 +35,7 @@ namespace Rpg_Restapi.Services {
       ServiceResponse<GetWeaponDto> response = new ServiceResponse<GetWeaponDto> ();
       try {
         Weapon weapon = _mapper.Map<Weapon> (newWeaponDto);
-        weapon.Id = Guid.NewGuid ();
+        weapon.Uuid = Guid.NewGuid ();
         _context.Weapons.Add (weapon);
         await _context.SaveChangesAsync ();
         response.Data = _mapper.Map<GetWeaponDto> (weapon);
