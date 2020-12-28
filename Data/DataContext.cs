@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Rpg_Restapi.Data;
 using Rpg_Restapi.Models;
@@ -14,11 +16,8 @@ namespace Rpg_Restapi.Data {
 
     protected override void OnModelCreating (ModelBuilder modelBuilder) {
 
-      modelBuilder.Entity<CharacterSkill> ()
-        .HasKey (cs => new { cs.CharacterId, cs.SkillId });
-
       modelBuilder.Entity<User> (entity => {
-        entity.HasIndex (u => u.Id).IsUnique ();
+        entity.HasIndex (u => u.Username).IsUnique ();
         entity.Property (user => user.Role).HasDefaultValue ("Player");
       });
 
@@ -27,6 +26,14 @@ namespace Rpg_Restapi.Data {
         new Skill { Id = 2, Name = "Frenzy", Damage = 20 },
         new Skill { Id = 3, Name = "Blizzard", Damage = 50 }
       );
+
+      modelBuilder.Entity<Weapon> ().HasData (
+        new Weapon { Uuid = Guid.NewGuid (), Name = "The Master Sword", Damage = 20 },
+        new Weapon { Uuid = Guid.NewGuid (), Name = "Crystal Wand", Damage = 5 }
+      );
+
+      modelBuilder.Entity<CharacterSkill> ()
+        .HasKey (cs => new { cs.CharacterId, cs.SkillId });
 
       Security.CreatePasswordHash ("1234567", out byte[] passwordHash, out byte[] passwordSalt);
 
@@ -56,11 +63,6 @@ namespace Rpg_Restapi.Data {
             Intelligence = 20,
             UserId = 2
         }
-      );
-
-      modelBuilder.Entity<Weapon> ().HasData (
-        new Weapon { Id = 1, Name = "The Master Sword", Damage = 20, CharacterId = 1 },
-        new Weapon { Id = 2, Name = "Crystal Wand", Damage = 5, CharacterId = 2 }
       );
 
       modelBuilder.Entity<CharacterSkill> ().HasData (

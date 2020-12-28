@@ -6,9 +6,11 @@ COPY *.csproj ./
 RUN dotnet restore
 
 
+
 # Copy everything else and build
-COPY . .
+COPY . ./
 RUN dotnet publish -c Release -o out
+
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:5.0
@@ -16,7 +18,6 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 
 # Run the app on container startup
-# Use your project name for the second parameter
-# e.g. MyProject.dll
-# ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
+# Using PORT in Program.cs
+ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
+

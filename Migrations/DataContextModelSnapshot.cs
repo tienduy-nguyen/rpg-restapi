@@ -56,9 +56,14 @@ namespace Rpg_Restapi.Migrations
                     b.Property<int>("Victories")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("WeaponUuid")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("WeaponUuid");
 
                     b.ToTable("Characters");
 
@@ -183,9 +188,13 @@ namespace Rpg_Restapi.Migrations
                         .HasDefaultValue("Player");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -193,16 +202,16 @@ namespace Rpg_Restapi.Migrations
                         new
                         {
                             Id = 1,
-                            PasswordHash = new byte[] { 82, 208, 159, 140, 109, 73, 41, 127, 23, 55, 206, 4, 151, 14, 182, 66, 39, 56, 93, 6, 124, 153, 247, 137, 117, 17, 57, 237, 94, 253, 4, 65, 158, 9, 28, 254, 147, 52, 116, 109, 169, 231, 14, 55, 11, 126, 220, 184, 64, 247, 31, 231, 120, 187, 182, 131, 129, 10, 63, 4, 134, 169, 91, 12 },
-                            PasswordSalt = new byte[] { 228, 70, 203, 61, 64, 148, 221, 31, 69, 161, 75, 234, 178, 93, 20, 159, 118, 222, 192, 249, 33, 131, 66, 202, 161, 197, 131, 136, 167, 97, 252, 60, 70, 143, 63, 124, 235, 79, 174, 38, 232, 34, 75, 40, 171, 20, 124, 249, 8, 77, 39, 20, 15, 211, 93, 226, 124, 44, 121, 205, 154, 130, 135, 140, 172, 168, 35, 151, 174, 130, 134, 246, 41, 40, 107, 167, 130, 225, 30, 152, 167, 94, 132, 118, 251, 72, 56, 43, 60, 94, 7, 15, 100, 57, 178, 24, 233, 45, 11, 138, 74, 188, 66, 214, 72, 102, 171, 81, 107, 141, 186, 40, 62, 7, 102, 59, 56, 88, 163, 152, 33, 186, 225, 62, 202, 6, 10, 52 },
+                            PasswordHash = new byte[] { 53, 249, 119, 31, 10, 93, 77, 146, 65, 134, 27, 97, 133, 8, 250, 252, 13, 79, 85, 101, 252, 235, 93, 246, 71, 59, 26, 44, 221, 92, 17, 147, 142, 222, 171, 249, 138, 157, 175, 150, 74, 103, 14, 149, 206, 218, 89, 110, 65, 252, 124, 196, 188, 189, 121, 124, 77, 168, 31, 208, 74, 238, 134, 162 },
+                            PasswordSalt = new byte[] { 123, 124, 171, 65, 255, 120, 178, 10, 11, 189, 30, 249, 191, 15, 78, 57, 220, 0, 230, 116, 91, 159, 144, 150, 33, 39, 55, 227, 185, 214, 171, 241, 29, 172, 228, 3, 168, 163, 37, 204, 138, 118, 188, 222, 82, 13, 213, 76, 167, 99, 70, 198, 181, 75, 202, 249, 238, 74, 157, 62, 71, 2, 246, 29, 24, 191, 95, 225, 105, 106, 120, 156, 140, 153, 57, 92, 211, 105, 201, 97, 76, 163, 233, 245, 32, 253, 176, 84, 22, 81, 225, 146, 172, 91, 95, 144, 11, 255, 213, 135, 37, 12, 132, 54, 188, 239, 206, 171, 160, 134, 104, 237, 71, 224, 190, 44, 166, 227, 94, 194, 148, 120, 121, 74, 224, 138, 195, 226 },
                             Role = "Player",
                             Username = "user1"
                         },
                         new
                         {
                             Id = 2,
-                            PasswordHash = new byte[] { 82, 208, 159, 140, 109, 73, 41, 127, 23, 55, 206, 4, 151, 14, 182, 66, 39, 56, 93, 6, 124, 153, 247, 137, 117, 17, 57, 237, 94, 253, 4, 65, 158, 9, 28, 254, 147, 52, 116, 109, 169, 231, 14, 55, 11, 126, 220, 184, 64, 247, 31, 231, 120, 187, 182, 131, 129, 10, 63, 4, 134, 169, 91, 12 },
-                            PasswordSalt = new byte[] { 228, 70, 203, 61, 64, 148, 221, 31, 69, 161, 75, 234, 178, 93, 20, 159, 118, 222, 192, 249, 33, 131, 66, 202, 161, 197, 131, 136, 167, 97, 252, 60, 70, 143, 63, 124, 235, 79, 174, 38, 232, 34, 75, 40, 171, 20, 124, 249, 8, 77, 39, 20, 15, 211, 93, 226, 124, 44, 121, 205, 154, 130, 135, 140, 172, 168, 35, 151, 174, 130, 134, 246, 41, 40, 107, 167, 130, 225, 30, 152, 167, 94, 132, 118, 251, 72, 56, 43, 60, 94, 7, 15, 100, 57, 178, 24, 233, 45, 11, 138, 74, 188, 66, 214, 72, 102, 171, 81, 107, 141, 186, 40, 62, 7, 102, 59, 56, 88, 163, 152, 33, 186, 225, 62, 202, 6, 10, 52 },
+                            PasswordHash = new byte[] { 53, 249, 119, 31, 10, 93, 77, 146, 65, 134, 27, 97, 133, 8, 250, 252, 13, 79, 85, 101, 252, 235, 93, 246, 71, 59, 26, 44, 221, 92, 17, 147, 142, 222, 171, 249, 138, 157, 175, 150, 74, 103, 14, 149, 206, 218, 89, 110, 65, 252, 124, 196, 188, 189, 121, 124, 77, 168, 31, 208, 74, 238, 134, 162 },
+                            PasswordSalt = new byte[] { 123, 124, 171, 65, 255, 120, 178, 10, 11, 189, 30, 249, 191, 15, 78, 57, 220, 0, 230, 116, 91, 159, 144, 150, 33, 39, 55, 227, 185, 214, 171, 241, 29, 172, 228, 3, 168, 163, 37, 204, 138, 118, 188, 222, 82, 13, 213, 76, 167, 99, 70, 198, 181, 75, 202, 249, 238, 74, 157, 62, 71, 2, 246, 29, 24, 191, 95, 225, 105, 106, 120, 156, 140, 153, 57, 92, 211, 105, 201, 97, 76, 163, 233, 245, 32, 253, 176, 84, 22, 81, 225, 146, 172, 91, 95, 144, 11, 255, 213, 135, 37, 12, 132, 54, 188, 239, 206, 171, 160, 134, 104, 237, 71, 224, 190, 44, 166, 227, 94, 194, 148, 120, 121, 74, 224, 138, 195, 226 },
                             Role = "Player",
                             Username = "user2"
                         });
@@ -210,13 +219,9 @@ namespace Rpg_Restapi.Migrations
 
             modelBuilder.Entity("Rpg_Restapi.Models.Weapon", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Uuid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("CharacterId")
-                        .HasColumnType("integer");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Damage")
                         .HasColumnType("integer");
@@ -224,25 +229,20 @@ namespace Rpg_Restapi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CharacterId")
-                        .IsUnique();
+                    b.HasKey("Uuid");
 
                     b.ToTable("Weapons");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            CharacterId = 1,
+                            Uuid = new Guid("e1d0072e-104f-4a5d-9747-8ef374ab308c"),
                             Damage = 20,
                             Name = "The Master Sword"
                         },
                         new
                         {
-                            Id = 2,
-                            CharacterId = 2,
+                            Uuid = new Guid("0d876ed4-456f-405d-b31a-9f5dc61bba85"),
                             Damage = 5,
                             Name = "Crystal Wand"
                         });
@@ -255,6 +255,10 @@ namespace Rpg_Restapi.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Rpg_Restapi.Models.Weapon", "Weapon")
+                        .WithMany()
+                        .HasForeignKey("WeaponUuid");
                 });
 
             modelBuilder.Entity("Rpg_Restapi.Models.CharacterSkill", b =>
@@ -268,15 +272,6 @@ namespace Rpg_Restapi.Migrations
                     b.HasOne("Rpg_Restapi.Models.Skill", "Skill")
                         .WithMany("CharacterSkills")
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Rpg_Restapi.Models.Weapon", b =>
-                {
-                    b.HasOne("Rpg_Restapi.Models.Character", "Character")
-                        .WithOne("Weapon")
-                        .HasForeignKey("Rpg_Restapi.Models.Weapon", "CharacterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
