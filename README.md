@@ -31,11 +31,7 @@ Note: In this project, I use .Net version `3.1.3` and `5.0`. If you don't use th
 This project shows: 
   - How to build a web REST API with .net core 3 or  5
   - How to have a good structure project for web api
-<<<<<<< HEAD
-  - How to use SQL Database & Entity Framework
-=======
   - How to use SQL Database, SQL Relationship & Entity Framework
->>>>>>> a4c49a4cba47e4116ef4b9a463a62f50ac4c9eef
   - How to secure app & authenticate with JsonWebToken
   - How to practice OOP Solution C# 
   - How to map & convert quickly between different classes
