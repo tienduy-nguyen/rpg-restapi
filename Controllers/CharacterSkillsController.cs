@@ -11,8 +11,8 @@ namespace Rpg_Restapi.Controllers {
   [ApiController]
   public class CharacterSkillsController : ControllerBase {
     private readonly ICharacterSkillService _characterSkillService;
-    public CharacterSkillsController (ICharacterSkillService weaponService) {
-      _characterSkillService = weaponService;
+    public CharacterSkillsController (ICharacterSkillService characterSkillService) {
+      _characterSkillService = characterSkillService;
     }
 
     /// <summary>

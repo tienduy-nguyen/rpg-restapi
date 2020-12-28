@@ -94,6 +94,7 @@ Step by step: basic to advance --> branch by branch:
 - Upgrade-net50 branch: Using .Net 5.0
   
 Todo:
+- [ ] Add guid database relationship
 - [ ] Fix database production on heroku (now, it works only for local)
 - [ ] Unit Testing
 - [ ] Try deploy with azure cloud too
