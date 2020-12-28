@@ -8,13 +8,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Rpg_Restapi.Data;
 
 namespace Rpg_Restapi {
   public class Program {
     public static void Main (string[] args) {
-      CreateHostBuilder (args)
-        .Build ()
-        .Run ();
+
+      var host = CreateHostBuilder (args).Build ();
+      using (var scope = host.Services.CreateScope ()) {
+        var db = scope.ServiceProvider.GetRequiredService<DataContext> ();
+        db.Database.Migrate ();
+      }
+      host.Run ();
+
+      // CreateHostBuilder (args)
+      //   .Build ()
+      //   .Run ();
     }
 
     public static IHostBuilder CreateHostBuilder (string[] args) =>
