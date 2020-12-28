@@ -28,18 +28,18 @@ If you wanna try run quickly this project from your local:
 Note: In this project, I use .Net version `3.1.3` and `5.0`. If you don't use these versions. You can use your own version by change version in `global.json` file and specify it in `.csproj` file: `<TargetFramework>netcoreapp3.1</TargetFramework>`.
 ## Development
 
-- With this project, you can understand:
+This project shows: 
   - How to build a web REST API with .net core 3 or  5
   - How to have a good structure project for web api
-  - Use SQL Database & Entity Framework
-  - Secure app & authenticate with JsonWebToken
-  - OOP Solution 
-  - Map & convert quickly between different classes
+  - How to use SQL Database & Entity Framework
+  - How to secure app & authenticate with JsonWebToken
+  - How to practice OOP Solution C# 
+  - How to map & convert quickly between different classes
   - How to create document API with Swagger/Open API
-  - Use Dependency Injection solution
+  - How to use Dependency Injection solution
   - How to access User from `HttpContextAccessor`
   - How to use asynchronously development solution for your project
-  - Use Generic type
+  - How to use Generic type
   
 
 ### Technologies
@@ -94,7 +94,8 @@ Step by step: basic to advance --> branch by branch:
 - Upgrade-net50 branch: Using .Net 5.0
   
 Todo:
-- [ ] Testing
+- [ ] Fix database production on heroku (now, it works only for local)
+- [ ] Unit Testing
 
 ## Deploy production on Heroku
 [Heroku](https://www.heroku.com/home) is free for 5 app forever. Azure cloud is free only for first year. I decided use heroku for deploy API server of this project.
