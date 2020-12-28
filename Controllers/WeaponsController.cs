@@ -21,8 +21,8 @@ namespace Rpg_Restapi.Controllers {
     /// <param name="newWeaponDto"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> AddWeapon (AddWeaponDto newWeaponDto) {
-      ServiceResponse<GetCharacterDto> response = await _weaponService.AddWeapon (newWeaponDto);
+    public async Task<IActionResult> CreateNewWeapon (CreateWeaponDto newWeaponDto) {
+      ServiceResponse<GetWeaponDto> response = await _weaponService.CreateNewWeapon (newWeaponDto);
       if (!response.Success) {
         return BadRequest (response);
       }

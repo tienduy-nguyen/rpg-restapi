@@ -26,6 +26,11 @@ namespace Rpg_Restapi.Data {
         new Skill { Id = 3, Name = "Blizzard", Damage = 50 }
       );
 
+      modelBuilder.Entity<Weapon> ().HasData (
+        new Weapon { Id = Guid.NewGuid (), Name = "The Master Sword", Damage = 20 },
+        new Weapon { Id = Guid.NewGuid (), Name = "Crystal Wand", Damage = 5 }
+      );
+
       modelBuilder.Entity<CharacterSkill> ()
         .HasKey (cs => new { cs.CharacterId, cs.SkillId });
 
@@ -57,11 +62,6 @@ namespace Rpg_Restapi.Data {
             Intelligence = 20,
             UserId = 2
         }
-      );
-
-      modelBuilder.Entity<Weapon> ().HasData (
-        new Weapon { Id = Guid.NewGuid (), Name = "The Master Sword", Damage = 20, CharacterId = 1 },
-        new Weapon { Id = Guid.NewGuid (), Name = "Crystal Wand", Damage = 5, CharacterId = 2 }
       );
 
       modelBuilder.Entity<CharacterSkill> ().HasData (
