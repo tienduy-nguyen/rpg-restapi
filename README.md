@@ -96,6 +96,7 @@ Step by step: basic to advance --> branch by branch:
 Todo:
 - [ ] Fix database production on heroku (now, it works only for local)
 - [ ] Unit Testing
+- [ ] Try deploy with azure cloud too
 
 ## Deploy production on Heroku
 [Heroku](https://www.heroku.com/home) is free for 5 app forever. Azure cloud is free only for first year. I decided use heroku for deploy API server of this project.
