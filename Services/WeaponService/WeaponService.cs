@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -33,6 +34,7 @@ namespace Rpg_Restapi.Services {
         }
         Weapon weapon = _mapper.Map<Weapon> (newWeaponDto);
         weapon.Character = character;
+        weapon.Id = Guid.NewGuid ();
         await _context.Weapons.AddAsync (weapon);
         await _context.SaveChangesAsync ();
         response.Data = _mapper.Map<GetCharacterDto> (character);
