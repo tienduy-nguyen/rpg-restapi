@@ -27,7 +27,9 @@ namespace Rpg_Restapi {
     public static IHostBuilder CreateHostBuilder (string[] args) {
       return Host.CreateDefaultBuilder (args)
         .ConfigureWebHostDefaults ((webBuilder) => {
-          webBuilder.UseUrls ($"http://*:{HostPort}");
+          if (!IsDevelopment) {
+            webBuilder.UseUrls ($"http://*:{HostPort}");
+          }
           webBuilder.UseStartup<Startup> ();
         });
     }
