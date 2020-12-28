@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
@@ -20,11 +21,13 @@ using Rpg_Restapi.Services;
 
 namespace Rpg_Restapi {
   public class Startup {
-    public Startup (IConfiguration configuration) {
+    public Startup (IConfiguration configuration, IWebHostEnvironment env) {
       Configuration = configuration;
+      _WebHostEnvironment = env;
     }
 
     public IConfiguration Configuration { get; }
+    public IWebHostEnvironment _WebHostEnvironment { get; }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices (IServiceCollection services) {
@@ -32,9 +35,13 @@ namespace Rpg_Restapi {
         .AddNewtonsoftJson (options => options.UseMemberCasing ());
       services.AddHttpContextAccessor ();
 
-      /* Handle json (for JsonPath) */
+      /* Connect database) */
+      string connectionString = _WebHostEnvironment.IsDevelopment () ?
+        Configuration.GetConnectionString ("DefaultConnection") :
+        GetHerokuConnectionString ();
+
       services.AddDbContext<DataContext> (options => {
-        options.UseNpgsql (Configuration.GetConnectionString ("DefaultConnection"));
+        options.UseNpgsql (connectionString);
       });
 
       /*  Auto mapper class - Dto*/
@@ -120,5 +127,21 @@ namespace Rpg_Restapi {
         endpoints.MapControllers ();
       });
     }
+
+    /* Helpers methods for heroku postgres database */
+
+    private string GetHerokuConnectionString () {
+      // Get the connection string from the ENV variables
+      string connectionUrl = System.Environment.GetEnvironmentVariable ("DATABASE_URL");
+
+      // parse the connection string
+      var databaseUri = new Uri (connectionUrl);
+
+      string db = databaseUri.LocalPath.TrimStart ('/');
+      string[] userInfo = databaseUri.UserInfo.Split (':', StringSplitOptions.RemoveEmptyEntries);
+
+      return $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
+    }
+
   }
 }
