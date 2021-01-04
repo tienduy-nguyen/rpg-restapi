@@ -117,7 +117,9 @@ Because Heroku isn't able to run C# code directly, but they do have supprot for 
 - Create `Dockerfile` & paste the following code:
   ```yml
   # Dockerfile
-  FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
+  FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
+  # For .net 3.1
+  # FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
   WORKDIR /app
 
   # Copy csproj and restore as distinct layers
@@ -125,26 +127,66 @@ Because Heroku isn't able to run C# code directly, but they do have supprot for 
   RUN dotnet restore
 
 
+
   # Copy everything else and build
-  COPY . .
+  COPY . ./
   RUN dotnet publish -c Release -o out
 
+
   # Build runtime image
-  FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
+  FROM mcr.microsoft.com/dotnet/aspnet:5.0
+  # FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
   WORKDIR /app
   COPY --from=build-env /app/out .
 
   # Run the app on container startup
-  # Use your project name for the second parameter
-  # e.g. MyProject.dll
-  # ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
-  CMD ASPNETCORE_URLS=http://*:$PORT dotnet Rpg_Restapi.dll
+  # Using PORT in Program.cs
+  ENTRYPOINT [ "dotnet", "Rpg_Restapi.dll" ]
+
+
   ```
 - Create `.dockerignore` to ignore debug & test file
   ```
   # .dockerignore file
   bin/
   obj/
+  ```
+- Update `Program.cs`
+  ```cs
+  namespace Rpg_Restapi {
+    public class Program {
+      public static void Main (string[] args) {
+
+        var host = CreateHostBuilder (args).Build ();
+
+        // Run migration at run time
+        using (var scope = host.Services.CreateScope ()) {
+          var db = scope.ServiceProvider.GetRequiredService<DataContext> ();
+          db.Database.Migrate ();
+        }
+        host.Run ();
+      }
+
+      public static IHostBuilder CreateHostBuilder (string[] args) {
+        return Host.CreateDefaultBuilder (args)
+          .ConfigureWebHostDefaults ((webBuilder) => {
+            if (!IsDevelopment) {
+              webBuilder.UseUrls ($"http://*:{HostPort}");
+            }
+            webBuilder.UseStartup<Startup> ();
+          });
+      }
+
+      private static bool IsDevelopment =>
+        Environment.GetEnvironmentVariable ("ASPNETCORE_ENVIRONMENT") == "Development";
+
+      public static string HostPort =>
+        IsDevelopment ?
+        "5000" :
+        Environment.GetEnvironmentVariable ("PORT");
+
+    }
+  }
   ```
 - Push your app to heroku container
   
